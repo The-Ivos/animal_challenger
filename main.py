@@ -2665,7 +2665,7 @@ def get_card():
 
     back_to_login_button = Button(2, 6, "back_to_explore", "", "")
 
-    new_card = randint(1,8)
+    new_card = randint(1,11) # TADY PAK NAPSAT AT TO POCITA ANIMALSY STEJNE JAK COUNTRIES Z DB
 
     GetCard(WIDTH//2, HEIGHT//2 - 28, new_card)
 
@@ -3752,7 +3752,7 @@ while run:
                         
                         
                     elif one_button.current_color == one_button.hover_color and one_button.type == "challenge":
-                        you_challenge_screen(user_logged, one_button.user, randint(1,3))
+                        you_challenge_screen(user_logged, one_button.user, randint(1,handle_db("get_countries_count")))
                     elif one_button.current_color == one_button.hover_color and one_button.type == "get_card":
                         get_card()                    
                     elif one_button.current_color == one_button.hover_color and one_button.type == "<< LOGOFF":

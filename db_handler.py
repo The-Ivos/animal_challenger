@@ -548,6 +548,18 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         except mysql.connector.Error as err:
             print(f"Nepovedlo se COUNT ANIMALS: {err}")
 
+    if action == "get_countries_count":
+    
+        try:            
+            cur.execute(f"select count(*) from countries")
+            
+            fetched = cur.fetchone()
+
+            return fetched[0]
+                  
+        except mysql.connector.Error as err:
+            print(f"Nepovedlo se COUNT COUNTRIES: {err}")
+
     if action == "last_3_update":
     
         try:            
