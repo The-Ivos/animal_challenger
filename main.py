@@ -40,16 +40,6 @@ class ContinueButton(pygame.sprite.Sprite):
 
     def update(self):
 
-        # print("OPPONENT", self.opponent)
-        # print("USER",self.user)
-        # print("OPPONENT_SCORING", self.opponent_scoring)
-        # print("OPPONENT_TOTAL_POINTS",self.opponent_total_points)
-        # print("USER_SCORING",self.user_scoring)
-        # print("USER_TOTAL_POINTS",self.user_total_points)
-        # print("OPPONENT_ANIMALS",self.opponent_animals)
-        # print("USER_ANIMALS",self.user_animals)
-        # print("FINAL_COUNTRY",self.final_country)
-
         pygame.draw.rect(SCREEN, self.current_color, self.rect, 0, 10)
         SCREEN.blit(self.continue_label, self.continue_label_rect)
 
@@ -67,12 +57,10 @@ class ContinueButton(pygame.sprite.Sprite):
                     handle_db("clean_user",self.user[0])
                     handle_db("continue",self.user[0],self.points)
                     handle_db("last_3_update",self.user[0],self.opponent[0])
-                # print(self.user[0])
-                # print(self.points)
+
                 return lobby_screen(self.user[1])
         else:
             self.current_color = self.og_color
-
 
 class FinalAnimalMiniCard(pygame.sprite.Sprite):
     def __init__(self, x, y, pic):
@@ -132,8 +120,7 @@ class RejectOrAcceptButton(pygame.sprite.Sprite):
         if self.type == "ok":
             self.og_color = CHALLENGE_BUTTON_COLOR_1
             self.hover_color = CHALLENGE_BUTTON_COLOR_2
-            self.what = "OK"
-            
+            self.what = "OK"            
 
         self.current_color = self.og_color
 
@@ -148,8 +135,7 @@ class RejectOrAcceptButton(pygame.sprite.Sprite):
             self.rect = self.reject_label.get_rect(topleft = (self.x + 30, self.y + 20))
         elif self.type == "ok":
             self.button = pygame.Rect(self.x, self.y, 100, 60)
-            self.rect = self.reject_label.get_rect(topleft = (self.x + 20, self.y + 10))
-       
+            self.rect = self.reject_label.get_rect(topleft = (self.x + 20, self.y + 10))       
         
         reject_or_accept_buttons_group.add(self)
 
@@ -159,13 +145,10 @@ class RejectOrAcceptButton(pygame.sprite.Sprite):
 
         if self.rect.collidepoint(mouse):
             self.current_color = self.hover_color
-            # print("dobry den!")
+
             if pygame.mouse.get_pressed()[0]:
-                # print("PRESSED")
-                # print(self.type)
-                if self.type == "cancel":                                      
-                    # print("SELF OPPONENT TOTO", self.opponent)
-                    # waiting_waiting()                    
+
+                if self.type == "cancel":                                                     
                     handle_db("cancelled_challenge", self.user, self.opponent)                    
                     return lobby_screen(self.user)
                 
@@ -179,13 +162,12 @@ class RejectOrAcceptButton(pygame.sprite.Sprite):
                 if self.type == "ok":
                     handle_db("rejected_ok", self.user)                    
                     return lobby_screen(self.user)
-
+                
         else:
             self.current_color = self.og_color
         
         pygame.draw.rect(SCREEN, self.current_color, self.button, 0, 10)
         SCREEN.blit(self.reject_label, self.rect)
-
 
 class GoButton(pygame.sprite.Sprite):
     def __init__(self, x, y, user, opponent):
@@ -195,8 +177,6 @@ class GoButton(pygame.sprite.Sprite):
         self.y = y
         self.user = user
         self.opponent = opponent
-        # self.country = [ctr for ctr in list(country_cards_group)]
-        # self.country = list(country_cards_group)[0]
 
         self.og_color = CHALLENGING_COLOR
         self.hover_color = CHALLENGE_BUTTON_COLOR_2
@@ -222,9 +202,7 @@ class GoButton(pygame.sprite.Sprite):
                 count_screen(user = self.user, opponent = self.opponent, country=list(country_cards_group)[0], animals = [anima.chosen_animals for anima in list(you_challenged_group)][0])  
                 return lobby_screen(user_logged)
         else:
-            self.color = self.og_color      
-
-
+            self.color = self.og_color
 
 class TotalMini(pygame.sprite.Sprite):
     def __init__(self, x, y, object, index):
@@ -244,10 +222,7 @@ class TotalMini(pygame.sprite.Sprite):
         total_minis_group.add(self)
     
     def update(self):
-        # print("TOTAL MINI INDEX",self.index)
-        # print("TOTAL_MINI_USER_ANIMALS_LIST",self.user_animal_list)
-        for one_card in self.user_animal_list:
-            print(one_card.pic)
+
         SCREEN.blit(self.image, self.rect)
 
         mouse = pygame.mouse.get_pos()
@@ -257,10 +232,8 @@ class TotalMini(pygame.sprite.Sprite):
                 self.user_animal_list.remove(self.object)
                 self.object.image = self.object.og_image
                 self.object.clickable = True
-                print("SELF_OBJECT_CLICKABLE",self.object.clickable)
                 self.kill()
-                total_minis_group.remove(self)
-                
+                total_minis_group.remove(self)                
 
 class AddAnimalButton(pygame.sprite.Sprite):
     def __init__(self, x, y, animal, object, chosen_card_object):
@@ -285,7 +258,6 @@ class AddAnimalButton(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.x, self.y, 200, 35)
 
     def update(self):
-        # print(self.object.clickable)
 
         pygame.draw.rect(SCREEN, self.color, self.rect, 0, 3)
         SCREEN.blit(self.add_label, self.add_label_rect)
@@ -295,9 +267,7 @@ class AddAnimalButton(pygame.sprite.Sprite):
         if self.rect.collidepoint(mouse):
             self.color = self.hover_color
             if pygame.mouse.get_pressed()[0]:                
-                # index = next((len(animals.chosen_animals) for animals in you_challenged_group),None)
-                # print("THIS IS THE INDEX", index)
-                # next((user.chosen_animals.append(self.animal) for user in you_challenged_group),None)
+
                 self.object.clickable = False
                 self.object.image = self.object.used_card
                 self.kill()
@@ -326,17 +296,13 @@ class AddAnimalButton(pygame.sprite.Sprite):
 
                 TotalMini(width_start + (width_coeff*index), height, self.object, index)
                 next((user.chosen_animals.append(self.object) for user in you_challenged_group),None)
-
                 
         else:
             self.color = self.og_color
 
-
 class CountryCard(pygame.sprite.Sprite):
     def __init__(self, x, y, country):
         super().__init__()
-
-        # print(country)
 
         country_atts = country[0]
 
@@ -344,8 +310,7 @@ class CountryCard(pygame.sprite.Sprite):
         self.y = y
         
         self.pic = country_atts[0]
-        self.continent = country_atts[3]
-        
+        self.continent = country_atts[3]        
 
         size_coeff = 1.7
 
@@ -354,7 +319,7 @@ class CountryCard(pygame.sprite.Sprite):
 
         country_cards_group.add(self)
 
-        list(you_challenged_group)[0].country = country_atts #self
+        list(you_challenged_group)[0].country = country_atts
 
 class ChosenAnimalCard(pygame.sprite.Sprite):
     def __init__(self, x, y, pic, object):
@@ -376,17 +341,12 @@ class ChosenAnimalCard(pygame.sprite.Sprite):
         self.animal_continent = self.animal_full_detail[3]
 
         if self.country_continent == self.animal_continent and len(list(total_minis_group)) < 5:
-            AddAnimalButton(550, 124, self.animal_full_detail, self.object, self)
-        
+            AddAnimalButton(550, 124, self.animal_full_detail, self.object, self)        
 
         chosen_animal_group.add(self)
 
     def update(self):
-        # print("BRING_ME_THE_ANIMAL",self.animal_continent)
-        # print("COUNTRY_CONTINENT",self.country_continent)
 
-        # for country in country_cards_group:
-        #     print(country.continent)
         SCREEN.blit(self.image, self.rect)
 
 class YouChallenged(pygame.sprite.Sprite):
@@ -397,7 +357,7 @@ class YouChallenged(pygame.sprite.Sprite):
         self.used_indexes = []
         self.chosen_animals = []
         self.opponent = opponent
-        self.country = "not here! "#[country.pic for country in list(country_cards_group)]
+        self.country = "not here!" 
 
         you_challenged_group.add(self)
 
@@ -443,8 +403,6 @@ class AnimalMiniCard(pygame.sprite.Sprite):
                         button.kill()
                         add_animal_buttons_group.remove(button)
                     ChosenAnimalCard(530, 110, self.pic, self)
-
-
 
 class GetCard(pygame.sprite.Sprite):
     def __init__(self, x, y, pic):
@@ -528,16 +486,11 @@ class ScrollArrow(pygame.sprite.Sprite):
                     for one_card in animal_mini_card_group:
                         one_card.rect.x += self.speed
                 else:
-                    self.image = self.arrow_right_free
-
-    
-        
+                    self.image = self.arrow_right_free        
 
 class AnimalCard(pygame.sprite.Sprite):
     def __init__(self, x, y, animal):
         super().__init__()
-
-        # print(animal)
 
         self.x = x
         self.y = y
@@ -547,10 +500,7 @@ class AnimalCard(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load(f"img/animals/{self.animal}.png").convert_alpha(),(168 * 1.5, 225 * 1.5))
         self.rect = self.image.get_rect(topleft = (self.x, self.y))
 
-        animal_card_group.add(self)
-
-        
-
+        animal_card_group.add(self)   
 
 class ChallengeButton(pygame.sprite.Sprite):
     def __init__(self, x, y, user, search = False):
@@ -561,14 +511,9 @@ class ChallengeButton(pygame.sprite.Sprite):
 
         self.search = search
 
-        # print("CHALLENGE_BUTTON_USER",user)
-
         self.moving_up = False
         self.moving_down = False
-        
-        # if search:
-        #     self.user = user
-        # else:
+
         self.user = user.split(" ")
         del self.user[-1]
         self.user = " ".join(self.user)
@@ -581,15 +526,6 @@ class ChallengeButton(pygame.sprite.Sprite):
         self.og_color = CHALLENGE_BUTTON_COLOR_1
         self.hover_color = CHALLENGE_BUTTON_COLOR_2
 
-        # self.og_color_fade_25 = (120, 23, 12, 0)
-        # self.og_color_fade_50 = (120, 23, 12, 120)
-        # self.og_color_fade_75 = (120, 23, 12, 180)
-
-        # self.alpha = 255
-        # self.newcolor = [39, 148, 0]
-        # self.newcolor_hover = [117, 233, 0]
-
-
         self.current_color = self.og_color
 
         button_group.add(self)
@@ -598,122 +534,26 @@ class ChallengeButton(pygame.sprite.Sprite):
 
         self.clickable = True
 
-        # button = pygame.draw.rect(SCREEN, "blue", (self.x, self.y, 50, 20), 0, 3)
-
         self.challenge_label = CHALLENGE_FONT.render("CHALLENGE!", 1, "white")
         self.challenge_label_rect = self.challenge_label.get_rect(topleft = (self.x + self.distance_coeff + 10, self.y + 9))
         
-        self.rect = pygame.Rect(self.x + self.distance_coeff, self.y, 90, 30)
-        # self.temp_surface = pygame.Surface((900, 700), pygame.SRCALPHA)   
+        self.rect = pygame.Rect(self.x + self.distance_coeff, self.y, 90, 30) 
 
     def update(self):
         
-        # if self.moving_up:
-        #     self.y -= MOVING_SPEED
-        #     self.rect.y -= MOVING_SPEED
-
-        # if self.moving_down:
-        #     self.y += MOVING_SPEED
-        #     self.rect.y += MOVING_SPEED
-
         button = pygame.draw.rect(SCREEN, self.current_color, (self.x + self.distance_coeff, self.y, 90, 30), 0, 3)
                 
-        # if self.y > FADE_DOWN_MAX + 27 or self.y < FADE_UP_MAX - 27:
-        #     if self.y > FADE_DOWN_MAX + 27:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 27:
-        #         self.fading_up = True
-        #     self.alpha = 0
-        #     self.clickable = False
-        #     Scroller(430, 200, "up")
-        # elif self.y > FADE_DOWN_MAX + 24 or self.y < FADE_UP_MAX - 24:
-        #     if self.y > FADE_DOWN_MAX + 24:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 24:
-        #         self.fading_up = True
-        #     self.alpha = 25
-        #     self.clickable = False
-        # elif self.y > FADE_DOWN_MAX + 21 or self.y < FADE_UP_MAX - 21:
-        #     if self.y > FADE_DOWN_MAX + 21:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 21:
-        #         self.fading_up = True
-        #     self.alpha = 51
-        #     self.clickable = False
-        # elif self.y > FADE_DOWN_MAX + 18 or self.y < FADE_UP_MAX - 18:
-        #     if self.y > FADE_DOWN_MAX + 18:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 18:
-        #         self.fading_up = True
-        #     self.alpha = 76
-        #     self.clickable = False
-        # elif self.y > FADE_DOWN_MAX + 15 or self.y < FADE_UP_MAX - 15:
-        #     if self.y > FADE_DOWN_MAX + 15:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 15:
-        #         self.fading_up = True
-        #     self.alpha = 102
-        #     self.clickable = True
-        # elif self.y > FADE_DOWN_MAX + 12 or self.y < FADE_UP_MAX - 12:
-        #     if self.y > FADE_DOWN_MAX + 12:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 12:
-        #         self.fading_up = True
-        #     self.alpha = 127
-        #     self.clickable = True
-        # elif self.y > FADE_DOWN_MAX + 9 or self.y < FADE_UP_MAX - 9:
-        #     if self.y > FADE_DOWN_MAX + 9:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 9:
-        #         self.fading_up = True
-        #     self.alpha = 153
-        #     self.clickable = True
-        # elif self.y > FADE_DOWN_MAX + 6 or self.y < FADE_UP_MAX - 6:
-        #     if self.y > FADE_DOWN_MAX + 6:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 6:
-        #         self.fading_up = True
-        #     self.alpha = 178
-        #     self.clickable = True
-        # elif self.y > FADE_DOWN_MAX + 3 or self.y < FADE_UP_MAX - 3:
-        #     if self.y > FADE_DOWN_MAX + 3:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX - 3:
-        #         self.fading_up = True
-        #     self.alpha = 204
-        #     self.clickable = True
-        # elif self.y > FADE_DOWN_MAX or self.y < FADE_UP_MAX:
-        #     if self.y > FADE_DOWN_MAX:
-        #         self.fading_down = True
-        #     elif self.y < FADE_UP_MAX :
-        #         self.fading_up = True
-        #     self.alpha = 229
-        #     self.clickable = True
-        # else:        
-        #     self.fading_down = False        
-        #     self.fading_up = False
-        #     self.alpha = 255
-        #     self.clickable = True
-
-        # self.og_color = tuple(self.newcolor + [self.alpha])
-        # self.hover_color = tuple(self.newcolor_hover + [self.alpha])
-
-        # self.challenge_label.set_alpha(self.alpha)
         self.current_color = self.og_color
 
         mouse = pygame.mouse.get_pos()
 
         if self.rect.collidepoint(mouse) and self.clickable:   
-            # print(self.user)                        
             self.current_color = self.hover_color
         else:
             self.current_color = self.og_color
 
         self.challenge_label_rect = self.challenge_label.get_rect(topleft = (self.x + self.distance_coeff + 10, self.y + 9))
-        SCREEN.blit(self.challenge_label, self.challenge_label_rect)
-
-    
-# Card(left_distance, nr, "friends", "ghost" , username)
+        SCREEN.blit(self.challenge_label, self.challenge_label_rect)    
 
 class Card(pygame.sprite.Sprite):
     def __init__(self, x, y, type, label, user, search = False):
@@ -723,13 +563,9 @@ class Card(pygame.sprite.Sprite):
         self.label = label
         self.user = user
 
-        print("PUVODNI LABEL", label)
-
         if label != "--no opponent here so far--" and label != "--no opponents yet--":
             pre_challenge = label.split(" (")
             pre_challenge = pre_challenge[0]
-
-            print(pre_challenge)
             
             self.challenge = handle_db("get_full_user",pre_challenge)[6]
         else:
@@ -740,19 +576,12 @@ class Card(pygame.sprite.Sprite):
         self.moving_down = False
         self.moving_up = False
 
-        # print("label_vole", self.label)
-        # print("user_vole", self.user)
-
         if self.type == "search":
             self.user_who = self.label
         else:
             self.user_who = self.label.split(" ")     
             self.user_who.pop(-1)   
             self.user_who = " ".join(self.user_who)
-
-        # print("SELF_USER_WHO_0",self.user)
-        # print("SELF_USER_WHO", self.user_who, "user_label", self.label)
-
 
         self.alpha = 255
 
@@ -765,7 +594,6 @@ class Card(pygame.sprite.Sprite):
         if self.label != "--no opponents yet--" and self.user_who != self.user and self.label != "--no opponent here so far--" and self.label != " " and not search and self.challenge == "free":
             ChallengeButton(x, y, self.label)
         elif self.label != "--no opponents yet--" and " ".join(self.user_who.split(" ")[:-1]) != self.user and self.label != "--no opponent here so far--" and self.label != " " and search and self.challenge == "free":
-            # print("SELFUSER", self.user, "SELFLABEL", " ".join(self.user_who.split(" ")[:-1]))
             ChallengeButton(x, y, self.label, True)
 
 
@@ -773,41 +601,7 @@ class Card(pygame.sprite.Sprite):
 
     def update(self):
 
-        # print("CARD SELF CHALLENGE", self.challenge)
-
-        # if self.moving_down:
-        #     self.card_rect.y += MOVING_SPEED
-        # if self.moving_up:
-        #     self.card_rect.y -= MOVING_SPEED
-
-        # if self.card_rect.y > FADE_DOWN_MAX + 27 or self.card_rect.y < FADE_UP_MAX - 27:
-        #     self.alpha = 0
-        # elif self.card_rect.y > FADE_DOWN_MAX + 24 or self.card_rect.y < FADE_UP_MAX - 24:
-        #     self.alpha = 25
-        # elif self.card_rect.y > FADE_DOWN_MAX + 21 or self.card_rect.y < FADE_UP_MAX - 21:
-        #     self.alpha = 51
-        # elif self.card_rect.y > FADE_DOWN_MAX + 18 or self.card_rect.y < FADE_UP_MAX - 18:
-        #     self.alpha = 76
-        # elif self.card_rect.y > FADE_DOWN_MAX + 15 or self.card_rect.y < FADE_UP_MAX - 15:
-        #     self.alpha = 102
-        # elif self.card_rect.y > FADE_DOWN_MAX + 12 or self.card_rect.y < FADE_UP_MAX - 12:
-        #     self.alpha = 127
-        # elif self.card_rect.y > FADE_DOWN_MAX + 9 or self.card_rect.y < FADE_UP_MAX - 9:
-        #     self.alpha = 153
-        # elif self.card_rect.y > FADE_DOWN_MAX + 6 or self.card_rect.y < FADE_UP_MAX - 6:
-        #     self.alpha = 178
-        # elif self.card_rect.y > FADE_DOWN_MAX + 3 or self.card_rect.y < FADE_UP_MAX - 3:
-        #     self.alpha = 204
-        # elif self.card_rect.y > FADE_DOWN_MAX or self.card_rect.y < FADE_UP_MAX:
-        #     self.alpha = 229
-        # else:
-        #     self.alpha = 255
-
-        # self.card.set_alpha(self.alpha)
-
-        SCREEN.blit(self.card, self.card_rect)
-
-    
+        SCREEN.blit(self.card, self.card_rect)    
 
 class Logo(pygame.sprite.Sprite):
     def __init__(self, x, y, screen):
@@ -826,8 +620,7 @@ class Logo(pygame.sprite.Sprite):
 
     def update(self):
 
-        SCREEN.blit(self.logo, self.logo_rect)
-        
+        SCREEN.blit(self.logo, self.logo_rect)        
 
 class Frames(pygame.sprite.Sprite):
     def __init__(self, x, y, screen, type = ""):
@@ -874,46 +667,8 @@ class Frames(pygame.sprite.Sprite):
         frames_group.add(self)
 
     def update(self):
-                
-        # if self.screen == "player_card":
 
-        #     if self.moving_down:
-        #         self.y += MOVING_SPEED
-        #     if self.moving_up:
-        #         self.y -= MOVING_SPEED
-
-        #     if self.y > FADE_DOWN_MAX + 27 - self.cards_coeff or self.y < FADE_UP_MAX - 27:
-        #         self.alpha = 0
-        #     elif self.y > FADE_DOWN_MAX + 24 - self.cards_coeff or self.y < FADE_UP_MAX - 24:
-        #         self.alpha = 14
-        #     elif self.y > FADE_DOWN_MAX + 21 - self.cards_coeff or self.y < FADE_UP_MAX - 21:
-        #         self.alpha = 24
-        #     elif self.y > FADE_DOWN_MAX + 18 - self.cards_coeff or self.y < FADE_UP_MAX - 18:
-        #         self.alpha = 36
-        #     elif self.y > FADE_DOWN_MAX + 15 - self.cards_coeff or self.y < FADE_UP_MAX - 15:
-        #         self.alpha = 45
-        #     elif self.y > FADE_DOWN_MAX + 12 - self.cards_coeff or self.y < FADE_UP_MAX - 12:
-        #         self.alpha = 68
-        #     elif self.y > FADE_DOWN_MAX + 9 - self.cards_coeff or self.y < FADE_UP_MAX - 9:
-        #         self.alpha = 80
-        #     elif self.y > FADE_DOWN_MAX + 6 - self.cards_coeff or self.y < FADE_UP_MAX - 6:
-        #         self.alpha = 92
-        #     elif self.y > FADE_DOWN_MAX + 3 - self.cards_coeff or self.y < FADE_UP_MAX - 3:
-        #         self.alpha = 110
-        #     elif self.y > FADE_DOWN_MAX - self.cards_coeff or self.y < FADE_UP_MAX:
-        #         self.alpha = 127
-        #     else:
-        #         self.alpha = 140
-
-        
-        #     self.menu_rectangle.set_alpha(self.alpha)
-
-        #     SCREEN.blit(self.menu_rectangle, (self.x, self.y))
-
-        # else:
-        SCREEN.blit(self.menu_rectangle, self.rect)
-
-        
+        SCREEN.blit(self.menu_rectangle, self.rect)        
 
 class Screens(pygame.sprite.Sprite):
     def __init__(self, type, username = "nobody", user_points = "0", animal = "", user = "", user_scoring ="", user_total_points = "", opponent = "", opponent_scoring = "", opponent_total_points = "", country = "", user_point_dif = ""):
@@ -933,10 +688,6 @@ class Screens(pygame.sprite.Sprite):
         self.opponent_total_points = opponent_total_points
 
         self.user_point_dif = user_point_dif
-
-        # self.menu_rectangle = pygame.Surface(pygame.Rect(100, 200, 600, 200).size)
-        # pygame.draw.rect(self.menu_rectangle, (255, 255, 255), self.menu_rectangle.get_rect())
-        # self.menu_rectangle.set_alpha(140)
 
         if self.type == "log_screen":
             log_screen_group.add(self)
@@ -966,17 +717,6 @@ class Screens(pygame.sprite.Sprite):
             rejected_waiting_screen_group.add(self)
         elif self.type == "final_screen":
             final_screen_group.add(self)
-
-            
-            
-            # animal_type = str(handle_db("get_animal_name",self.animal)).upper()
-            # if animal_type.startswith(("A","E","I","O","U","Y")):
-            #     self.predlozka = "an"
-            # else:
-            #     self.predlozka = "a"
-
-            # self.get_animal_label = BIGGER_FONT.render(f"You got {self.predlozka} {animal_type}!", 1, GOT_COLOR)
-            # self.get_animal_rect = self.get_animal_label.get_rect(center = (WIDTH//2, HEIGHT//2+250))
         
         elif self.type == "you_challenge_screen":
             you_challenge_screen_group.add(self)
@@ -986,8 +726,6 @@ class Screens(pygame.sprite.Sprite):
     def update(self):
         
         if self.type == "log_screen":
-
-            # SCREEN.blit(self.menu_rectangle, (95, 130))
             
             login_label = BASE_FONT.render("Start with your login, please:", 1, FONT_COLOR)
             login_label_rect = login_label.get_rect(center = (WIDTH//2, 175))
@@ -1112,16 +850,6 @@ class Screens(pygame.sprite.Sprite):
             challenging_rect = challenging.get_rect(topleft = (440, 74))
             SCREEN.blit(challenging, challenging_rect)
 
-            
-        # elif self.type == "explore_screen":
-        #     welcome_label = BASE_FONT.render(f"Welcome, {self.username}!", 1, FONT_COLOR)
-        #     welcome_rect = welcome_label.get_rect(topleft = (30, 86))
-        #     SCREEN.blit(welcome_label, welcome_rect)
-
-        #     points = BASE_FONT.render(f"You have currently {self.points} points!", 1, FONT_COLOR)
-        #     points_rect = points.get_rect(topright = (870, 86))
-        #     SCREEN.blit(points, points_rect)
-
         elif self.type == "waiting_screen":
             loading_label = BASE_FONT.render(f"LOADING...", 1, FONT_COLOR)
             loading_rect = loading_label.get_rect(center = (WIDTH//2, HEIGHT//2 - 50))
@@ -1131,17 +859,12 @@ class Screens(pygame.sprite.Sprite):
             wait_rect = wait_label.get_rect(center = (WIDTH//2, HEIGHT//2))
             SCREEN.blit(wait_label, wait_rect)            
 
-            # print("I WAS HERE!")         
-
             self.kill()
             waiting_screen_group.remove(self)
 
         elif self.type == "get_card_screen":
-            
-            # get_animal_label = BASE_FONT.render(f"You've got {handle_db("get_animal_name",self.animal)}", 1, FONT_COLOR)
-            # get_animal_rect = get_animal_label.get_rect(center = (WIDTH//2, HEIGHT//2+250))
+
             SCREEN.blit(self.get_animal_label, self.get_animal_rect)            
-            
 
         elif self.type == "register_new_user_screen":
             reg_warning_text = BASE_FONT.render(warning_message, 1, WARNING_COLOR)
@@ -1210,13 +933,10 @@ class Screens(pygame.sprite.Sprite):
             points_dif_nr_pt_rect = points_dif_nr_pt.get_rect(center = (WIDTH//2, 590))
             SCREEN.blit(points_dif_nr_pt, points_dif_nr_pt_rect)
 
-            # USER ANIMALSY
-                #ANIMAL 1
             user_animal_1_name = SMALLER_FONT.render(f"{self.user_scoring[0][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             user_animal_1_name_rect = user_animal_1_name.get_rect(topleft = (25, 75 + (125 * 0)))
             SCREEN.blit(user_animal_1_name, user_animal_1_name_rect)
 
-                #ANIMAL 1 COUNTRY
             doubledot = ":"
             if type(self.user_scoring[0][1][1]) == int:
                 if self.user_scoring[0][1][1] > 0:
@@ -1231,7 +951,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_country_rect = user_animal_1_country.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 0)))
             SCREEN.blit(user_animal_1_country, user_animal_1_country_rect)
 
-                #ANIMAL 1 DAYTIME
             doubledot = ":"
             if type(self.user_scoring[0][2][1]) == int:
                 if self.user_scoring[0][2][1] > 0:
@@ -1246,7 +965,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_daytime_rect = user_animal_1_daytime.get_rect(topleft = (90 + 88, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 0)))
             SCREEN.blit(user_animal_1_daytime, user_animal_1_daytime_rect)
 
-                #ANIMAL 1 ITEM 1
             doubledot = ":"
             if type(self.user_scoring[0][3][1]) == int:
                 if self.user_scoring[0][3][1] > 0:
@@ -1261,7 +979,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_item1_rect = user_animal_1_item1.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 1)))
             SCREEN.blit(user_animal_1_item1, user_animal_1_item1_rect)
 
-                #ANIMAL 1 ITEM 2
             doubledot = ":"
             if type(self.user_scoring[0][4][1]) == int:
                 if self.user_scoring[0][4][1] > 0:
@@ -1276,7 +993,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_item2_rect = user_animal_1_item2.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 2)))
             SCREEN.blit(user_animal_1_item2, user_animal_1_item2_rect)
 
-                #ANIMAL 1 ITEM 3
             doubledot = ":"
             if type(self.user_scoring[0][5][1]) == int:
                 if self.user_scoring[0][5][1] > 0:
@@ -1291,7 +1007,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_item3_rect = user_animal_1_item3.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 3)))
             SCREEN.blit(user_animal_1_item3, user_animal_1_item3_rect)
 
-                #ANIMAL 1 ITEM 4
             doubledot = ":"
             if type(self.user_scoring[0][6][1]) == int:
                 if self.user_scoring[0][6][1] > 0:
@@ -1306,7 +1021,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_item4_rect = user_animal_1_item4.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 4)))
             SCREEN.blit(user_animal_1_item4, user_animal_1_item4_rect)
 
-                #ANIMAL 1 ITEM 5
             doubledot = ":"
             if type(self.user_scoring[0][7][1]) == int:
                 if self.user_scoring[0][7][1] > 0:
@@ -1321,12 +1035,10 @@ class Screens(pygame.sprite.Sprite):
             user_animal_1_item5_rect = user_animal_1_item5.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 5)))
             SCREEN.blit(user_animal_1_item5, user_animal_1_item5_rect)
 
-                #ANIMAL 2
             user_animal_2_name = SMALLER_FONT.render(f"{self.user_scoring[1][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             user_animal_2_name_rect = user_animal_2_name.get_rect(topleft = (25, 75 + (125 * 1)))
             SCREEN.blit(user_animal_2_name, user_animal_2_name_rect)
 
-                #ANIMAL 2 COUNTRY
             doubledot = ":"
             if type(self.user_scoring[1][1][1]) == int:
                 if self.user_scoring[1][1][1] > 0:
@@ -1341,7 +1053,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_country_rect = user_animal_2_country.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 0)))
             SCREEN.blit(user_animal_2_country, user_animal_2_country_rect)
 
-                #ANIMAL 2 DAYTIME
             doubledot = ":"
             if type(self.user_scoring[1][2][1]) == int:
                 if self.user_scoring[1][2][1] > 0:
@@ -1356,7 +1067,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_daytime_rect = user_animal_2_daytime.get_rect(topleft = (90 + 88, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 0)))
             SCREEN.blit(user_animal_2_daytime, user_animal_2_daytime_rect)
 
-                #ANIMAL 2 ITEM 1
             doubledot = ":"
             if type(self.user_scoring[1][3][1]) == int:
                 if self.user_scoring[1][3][1] > 0:
@@ -1371,7 +1081,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_item1_rect = user_animal_2_item1.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 1)))
             SCREEN.blit(user_animal_2_item1, user_animal_2_item1_rect)
 
-                #ANIMAL 2 ITEM 2
             doubledot = ":"
             if type(self.user_scoring[1][4][1]) == int:
                 if self.user_scoring[1][4][1] > 0:
@@ -1386,7 +1095,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_item2_rect = user_animal_2_item2.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 2)))
             SCREEN.blit(user_animal_2_item2, user_animal_2_item2_rect)
 
-                #ANIMAL 2 ITEM 3
             doubledot = ":"
             if type(self.user_scoring[1][5][1]) == int:
                 if self.user_scoring[1][5][1] > 0:
@@ -1401,7 +1109,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_item3_rect = user_animal_2_item3.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 3)))
             SCREEN.blit(user_animal_2_item3, user_animal_2_item3_rect)
 
-                #ANIMAL 2 ITEM 4
             doubledot = ":"
             if type(self.user_scoring[1][6][1]) == int:
                 if self.user_scoring[1][6][1] > 0:
@@ -1416,7 +1123,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_item4_rect = user_animal_2_item4.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 4)))
             SCREEN.blit(user_animal_2_item4, user_animal_2_item4_rect)
 
-                #ANIMAL 2 ITEM 5
             doubledot = ":"
             if type(self.user_scoring[1][7][1]) == int:
                 if self.user_scoring[1][7][1] > 0:
@@ -1431,12 +1137,10 @@ class Screens(pygame.sprite.Sprite):
             user_animal_2_item5_rect = user_animal_2_item5.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 5)))
             SCREEN.blit(user_animal_2_item5, user_animal_2_item5_rect)
 
-                #ANIMAL 3
             user_animal_3_name = SMALLER_FONT.render(f"{self.user_scoring[2][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             user_animal_3_name_rect = user_animal_3_name.get_rect(topleft = (25, 75 + (125 * 2)))
             SCREEN.blit(user_animal_3_name, user_animal_3_name_rect)
 
-            #ANIMAL 3 COUNTRY
             doubledot = ":"
             if type(self.user_scoring[2][1][1]) == int:
                 if self.user_scoring[2][1][1] > 0:
@@ -1451,7 +1155,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_country_rect = user_animal_3_country.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 0)))
             SCREEN.blit(user_animal_3_country, user_animal_3_country_rect)
 
-                #ANIMAL 3 DAYTIME
             doubledot = ":"
             if type(self.user_scoring[2][2][1]) == int:
                 if self.user_scoring[2][2][1] > 0:
@@ -1466,7 +1169,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_daytime_rect = user_animal_3_daytime.get_rect(topleft = (90 + 88, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 0)))
             SCREEN.blit(user_animal_3_daytime, user_animal_3_daytime_rect)
 
-                #ANIMAL 3 ITEM 1
             doubledot = ":"
             if type(self.user_scoring[2][3][1]) == int:
                 if self.user_scoring[2][3][1] > 0:
@@ -1481,7 +1183,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_item1_rect = user_animal_3_item1.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 1)))
             SCREEN.blit(user_animal_3_item1, user_animal_3_item1_rect)
 
-                #ANIMAL 3 ITEM 2
             doubledot = ":"
             if type(self.user_scoring[2][4][1]) == int:
                 if self.user_scoring[2][4][1] > 0:
@@ -1496,7 +1197,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_item2_rect = user_animal_3_item2.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 2)))
             SCREEN.blit(user_animal_3_item2, user_animal_3_item2_rect)
 
-                #ANIMAL 3 ITEM 3
             doubledot = ":"
             if type(self.user_scoring[2][5][1]) == int:
                 if self.user_scoring[2][5][1] > 0:
@@ -1511,7 +1211,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_item3_rect = user_animal_3_item3.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 3)))
             SCREEN.blit(user_animal_3_item3, user_animal_3_item3_rect)
 
-                #ANIMAL 3 ITEM 4
             doubledot = ":"
             if type(self.user_scoring[2][6][1]) == int:
                 if self.user_scoring[2][6][1] > 0:
@@ -1526,7 +1225,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_item4_rect = user_animal_3_item4.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 4)))
             SCREEN.blit(user_animal_3_item4, user_animal_3_item4_rect)
 
-                #ANIMAL 3 ITEM 5
             doubledot = ":"
             if type(self.user_scoring[2][7][1]) == int:
                 if self.user_scoring[2][7][1] > 0:
@@ -1541,12 +1239,10 @@ class Screens(pygame.sprite.Sprite):
             user_animal_3_item5_rect = user_animal_3_item5.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 5)))
             SCREEN.blit(user_animal_3_item5, user_animal_3_item5_rect)
 
-                #ANIMAL 4
             user_animal_4_name = SMALLER_FONT.render(f"{self.user_scoring[3][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             user_animal_4_name_rect = user_animal_4_name.get_rect(topleft = (25, 75 + (125 * 3)))
             SCREEN.blit(user_animal_4_name, user_animal_4_name_rect)
 
-            #ANIMAL 4 COUNTRY
             doubledot = ":"
             if type(self.user_scoring[3][1][1]) == int:
                 if self.user_scoring[3][1][1] > 0:
@@ -1561,7 +1257,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_country_rect = user_animal_4_country.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 0)))
             SCREEN.blit(user_animal_4_country, user_animal_4_country_rect)
 
-                #ANIMAL 4 DAYTIME
             doubledot = ":"
             if type(self.user_scoring[3][2][1]) == int:
                 if self.user_scoring[3][2][1] > 0:
@@ -1576,7 +1271,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_daytime_rect = user_animal_4_daytime.get_rect(topleft = (90 + 88, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 0)))
             SCREEN.blit(user_animal_4_daytime, user_animal_4_daytime_rect)
 
-                #ANIMAL 4 ITEM 1
             doubledot = ":"
             if type(self.user_scoring[3][3][1]) == int:
                 if self.user_scoring[3][3][1] > 0:
@@ -1591,7 +1285,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_item1_rect = user_animal_4_item1.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 1)))
             SCREEN.blit(user_animal_4_item1, user_animal_4_item1_rect)
 
-                #ANIMAL 4 ITEM 2
             doubledot = ":"
             if type(self.user_scoring[3][4][1]) == int:
                 if self.user_scoring[3][4][1] > 0:
@@ -1606,7 +1299,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_item2_rect = user_animal_4_item2.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 2)))
             SCREEN.blit(user_animal_4_item2, user_animal_4_item2_rect)
 
-                #ANIMAL 4 ITEM 3
             doubledot = ":"
             if type(self.user_scoring[3][5][1]) == int:
                 if self.user_scoring[3][5][1] > 0:
@@ -1621,7 +1313,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_item3_rect = user_animal_4_item3.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 3)))
             SCREEN.blit(user_animal_4_item3, user_animal_4_item3_rect)
 
-                #ANIMAL 4 ITEM 4
             doubledot = ":"
             if type(self.user_scoring[3][6][1]) == int:
                 if self.user_scoring[3][6][1] > 0:
@@ -1636,7 +1327,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_item4_rect = user_animal_4_item4.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 4)))
             SCREEN.blit(user_animal_4_item4, user_animal_4_item4_rect)
 
-                #ANIMAL 4 ITEM 5
             doubledot = ":"
             if type(self.user_scoring[3][7][1]) == int:
                 if self.user_scoring[3][7][1] > 0:
@@ -1651,12 +1341,10 @@ class Screens(pygame.sprite.Sprite):
             user_animal_4_item5_rect = user_animal_4_item5.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 5)))
             SCREEN.blit(user_animal_4_item5, user_animal_4_item5_rect)
 
-                #ANIMAL 5
             user_animal_5_name = SMALLER_FONT.render(f"{self.user_scoring[4][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             user_animal_5_name_rect = user_animal_5_name.get_rect(topleft = (25, 75 + (125 * 4)))
             SCREEN.blit(user_animal_5_name, user_animal_5_name_rect)
 
-            #ANIMAL 5 COUNTRY
             doubledot = ":"
             if type(self.user_scoring[4][1][1]) == int:
                 if self.user_scoring[4][1][1] > 0:
@@ -1671,7 +1359,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_country_rect = user_animal_5_country.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 0)))
             SCREEN.blit(user_animal_5_country, user_animal_5_country_rect)
 
-                #ANIMAL 5 DAYTIME
             doubledot = ":"
             if type(self.user_scoring[4][2][1]) == int:
                 if self.user_scoring[4][2][1] > 0:
@@ -1686,7 +1373,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_daytime_rect = user_animal_5_daytime.get_rect(topleft = (90 + 88, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 0)))
             SCREEN.blit(user_animal_5_daytime, user_animal_5_daytime_rect)
 
-                #ANIMAL 5 ITEM 1
             doubledot = ":"
             if type(self.user_scoring[4][3][1]) == int:
                 if self.user_scoring[4][3][1] > 0:
@@ -1701,7 +1387,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_item1_rect = user_animal_5_item1.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 1)))
             SCREEN.blit(user_animal_5_item1, user_animal_5_item1_rect)
 
-                #ANIMAL 5 ITEM 2
             doubledot = ":"
             if type(self.user_scoring[4][4][1]) == int:
                 if self.user_scoring[4][4][1] > 0:
@@ -1716,7 +1401,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_item2_rect = user_animal_5_item2.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 2)))
             SCREEN.blit(user_animal_5_item2, user_animal_5_item2_rect)
 
-                #ANIMAL 5 ITEM 3
             doubledot = ":"
             if type(self.user_scoring[4][5][1]) == int:
                 if self.user_scoring[4][5][1] > 0:
@@ -1731,7 +1415,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_item3_rect = user_animal_5_item3.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 3)))
             SCREEN.blit(user_animal_5_item3, user_animal_5_item3_rect)
 
-                #ANIMAL 5 ITEM 4
             doubledot = ":"
             if type(self.user_scoring[4][6][1]) == int:
                 if self.user_scoring[4][6][1] > 0:
@@ -1746,7 +1429,6 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_item4_rect = user_animal_5_item4.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 4)))
             SCREEN.blit(user_animal_5_item4, user_animal_5_item4_rect)
 
-                #ANIMAL 5 ITEM 5
             doubledot = ":"
             if type(self.user_scoring[4][7][1]) == int:
                 if self.user_scoring[4][7][1] > 0:
@@ -1761,14 +1443,10 @@ class Screens(pygame.sprite.Sprite):
             user_animal_5_item5_rect = user_animal_5_item5.get_rect(topleft = (90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 5)))
             SCREEN.blit(user_animal_5_item5, user_animal_5_item5_rect)
 
-            # OPPONENT ANIMALSY
-
-                #ANIMAL 1
             opponent_animal_1_name = SMALLER_FONT.render(f"{self.opponent_scoring[0][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             opponent_animal_1_name_rect = opponent_animal_1_name.get_rect(topright = (WIDTH - 25, 75 + (125 * 0)))
             SCREEN.blit(opponent_animal_1_name, opponent_animal_1_name_rect)
 
-                #ANIMAL 1 COUNTRY
             doubledot = ":"
             if type(self.opponent_scoring[0][1][1]) == int:
                 if self.opponent_scoring[0][1][1] > 0:
@@ -1783,7 +1461,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_country_rect = opponent_animal_1_country.get_rect(topright = (WIDTH - 90 - 88, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 0)))
             SCREEN.blit(opponent_animal_1_country, opponent_animal_1_country_rect)
 
-                #ANIMAL 1 DAYTIME
             doubledot = ":"
             if type(self.opponent_scoring[0][2][1]) == int:
                 if self.opponent_scoring[0][2][1] > 0:
@@ -1798,7 +1475,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_daytime_rect = opponent_animal_1_daytime.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 0)))
             SCREEN.blit(opponent_animal_1_daytime, opponent_animal_1_daytime_rect)
 
-                #ANIMAL 1 ITEM 1
             doubledot = ":"
             if type(self.opponent_scoring[0][3][1]) == int:
                 if self.opponent_scoring[0][3][1] > 0:
@@ -1813,7 +1489,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_item1_rect = opponent_animal_1_item1.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 1)))
             SCREEN.blit(opponent_animal_1_item1, opponent_animal_1_item1_rect)
 
-                #ANIMAL 1 ITEM 2
             doubledot = ":"
             if type(self.opponent_scoring[0][4][1]) == int:
                 if self.opponent_scoring[0][4][1] > 0:
@@ -1828,7 +1503,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_item2_rect = opponent_animal_1_item2.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 2)))
             SCREEN.blit(opponent_animal_1_item2, opponent_animal_1_item2_rect)
 
-                #ANIMAL 1 ITEM 3
             doubledot = ":"
             if type(self.opponent_scoring[0][5][1]) == int:
                 if self.opponent_scoring[0][5][1] > 0:
@@ -1843,7 +1517,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_item3_rect = opponent_animal_1_item3.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 3)))
             SCREEN.blit(opponent_animal_1_item3, opponent_animal_1_item3_rect)
 
-                #ANIMAL 1 ITEM 4
             doubledot = ":"
             if type(self.opponent_scoring[0][6][1]) == int:
                 if self.opponent_scoring[0][6][1] > 0:
@@ -1858,7 +1531,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_item4_rect = opponent_animal_1_item4.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 4)))
             SCREEN.blit(opponent_animal_1_item4, opponent_animal_1_item4_rect)
 
-                #ANIMAL 1 ITEM 5
             doubledot = ":"
             if type(self.opponent_scoring[0][7][1]) == int:
                 if self.opponent_scoring[0][7][1] > 0:
@@ -1873,12 +1545,10 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_1_item5_rect = opponent_animal_1_item5.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 0) + (16 * 5)))
             SCREEN.blit(opponent_animal_1_item5, opponent_animal_1_item5_rect)
 
-                #ANIMAL 2
             opponent_animal_2_name = SMALLER_FONT.render(f"{self.opponent_scoring[1][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             opponent_animal_2_name_rect = opponent_animal_2_name.get_rect(topright = (WIDTH - 25, 75 + (125 * 1)))
             SCREEN.blit(opponent_animal_2_name, opponent_animal_2_name_rect)
 
-            #ANIMAL 2 COUNTRY
             doubledot = ":"
             if type(self.opponent_scoring[1][1][1]) == int:
                 if self.opponent_scoring[1][1][1] > 0:
@@ -1893,7 +1563,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_country_rect = opponent_animal_2_country.get_rect(topright = (WIDTH - 90 - 88, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 0)))
             SCREEN.blit(opponent_animal_2_country, opponent_animal_2_country_rect)
 
-                #ANIMAL 2 DAYTIME
             doubledot = ":"
             if type(self.opponent_scoring[1][2][1]) == int:
                 if self.opponent_scoring[1][2][1] > 0:
@@ -1908,7 +1577,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_daytime_rect = opponent_animal_2_daytime.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 0)))
             SCREEN.blit(opponent_animal_2_daytime, opponent_animal_2_daytime_rect)
 
-                #ANIMAL 2 ITEM 1
             doubledot = ":"
             if type(self.opponent_scoring[1][3][1]) == int:
                 if self.opponent_scoring[1][3][1] > 0:
@@ -1923,7 +1591,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_item1_rect = opponent_animal_2_item1.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 1)))
             SCREEN.blit(opponent_animal_2_item1, opponent_animal_2_item1_rect)
 
-                #ANIMAL 2 ITEM 2
             doubledot = ":"
             if type(self.opponent_scoring[1][4][1]) == int:
                 if self.opponent_scoring[1][4][1] > 0:
@@ -1938,7 +1605,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_item2_rect = opponent_animal_2_item2.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 2)))
             SCREEN.blit(opponent_animal_2_item2, opponent_animal_2_item2_rect)
 
-                #ANIMAL 2 ITEM 3
             doubledot = ":"
             if type(self.opponent_scoring[1][5][1]) == int:
                 if self.opponent_scoring[1][5][1] > 0:
@@ -1953,7 +1619,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_item3_rect = opponent_animal_2_item3.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 3)))
             SCREEN.blit(opponent_animal_2_item3, opponent_animal_2_item3_rect)
 
-                #ANIMAL 2 ITEM 4
             doubledot = ":"
             if type(self.opponent_scoring[1][6][1]) == int:
                 if self.opponent_scoring[1][6][1] > 0:
@@ -1968,7 +1633,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_item4_rect = opponent_animal_2_item4.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 4)))
             SCREEN.blit(opponent_animal_2_item4, opponent_animal_2_item4_rect)
 
-                #ANIMAL 2 ITEM 5
             doubledot = ":"
             if type(self.opponent_scoring[1][7][1]) == int:
                 if self.opponent_scoring[1][7][1] > 0:
@@ -1983,12 +1647,10 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_2_item5_rect = opponent_animal_2_item5.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 1) + (16 * 5)))
             SCREEN.blit(opponent_animal_2_item5, opponent_animal_2_item5_rect)
 
-                #ANIMAL 3
             opponent_animal_3_name = SMALLER_FONT.render(f"{self.opponent_scoring[2][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             opponent_animal_3_name_rect = opponent_animal_3_name.get_rect(topright = (WIDTH - 25, 75 + (125 * 2)))
             SCREEN.blit(opponent_animal_3_name, opponent_animal_3_name_rect)
 
-                #ANIMAL 3 COUNTRY
             doubledot = ":"
             if type(self.opponent_scoring[2][1][1]) == int:
                 if self.opponent_scoring[2][1][1] > 0:
@@ -2003,7 +1665,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_country_rect = opponent_animal_3_country.get_rect(topright = (WIDTH - 90 - 88, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 0)))
             SCREEN.blit(opponent_animal_3_country, opponent_animal_3_country_rect)
 
-                #ANIMAL 3 DAYTIME
             doubledot = ":"
             if type(self.opponent_scoring[2][2][1]) == int:
                 if self.opponent_scoring[2][2][1] > 0:
@@ -2018,7 +1679,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_daytime_rect = opponent_animal_3_daytime.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 0)))
             SCREEN.blit(opponent_animal_3_daytime, opponent_animal_3_daytime_rect)
 
-                #ANIMAL 3 ITEM 1
             doubledot = ":"
             if type(self.opponent_scoring[2][3][1]) == int:
                 if self.opponent_scoring[2][3][1] > 0:
@@ -2033,7 +1693,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_item1_rect = opponent_animal_3_item1.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 1)))
             SCREEN.blit(opponent_animal_3_item1, opponent_animal_3_item1_rect)
 
-                #ANIMAL 3 ITEM 2
             doubledot = ":"
             if type(self.opponent_scoring[2][4][1]) == int:
                 if self.opponent_scoring[2][4][1] > 0:
@@ -2048,7 +1707,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_item2_rect = opponent_animal_3_item2.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 2)))
             SCREEN.blit(opponent_animal_3_item2, opponent_animal_3_item2_rect)
 
-                #ANIMAL 3 ITEM 3
             doubledot = ":"
             if type(self.opponent_scoring[2][5][1]) == int:
                 if self.opponent_scoring[2][5][1] > 0:
@@ -2063,7 +1721,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_item3_rect = opponent_animal_3_item3.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 3)))
             SCREEN.blit(opponent_animal_3_item3, opponent_animal_3_item3_rect)
 
-                #ANIMAL 3 ITEM 4
             doubledot = ":"
             if type(self.opponent_scoring[2][6][1]) == int:
                 if self.opponent_scoring[2][6][1] > 0:
@@ -2078,7 +1735,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_item4_rect = opponent_animal_3_item4.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 4)))
             SCREEN.blit(opponent_animal_3_item4, opponent_animal_3_item4_rect)
 
-                #ANIMAL 3 ITEM 5
             doubledot = ":"
             if type(self.opponent_scoring[2][7][1]) == int:
                 if self.opponent_scoring[2][7][1] > 0:
@@ -2093,12 +1749,10 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_3_item5_rect = opponent_animal_3_item5.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 2) + (16 * 5)))
             SCREEN.blit(opponent_animal_3_item5, opponent_animal_3_item5_rect)
 
-                #ANIMAL 4
             opponent_animal_4_name = SMALLER_FONT.render(f"{self.opponent_scoring[3][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             opponent_animal_4_name_rect = opponent_animal_4_name.get_rect(topright = (WIDTH - 25, 75 + (125 * 3)))
             SCREEN.blit(opponent_animal_4_name, opponent_animal_4_name_rect)
 
-                #ANIMAL 4 COUNTRY
             doubledot = ":"
             if type(self.opponent_scoring[3][1][1]) == int:
                 if self.opponent_scoring[3][1][1] > 0:
@@ -2113,7 +1767,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_country_rect = opponent_animal_4_country.get_rect(topright = (WIDTH - 90 - 88, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 0)))
             SCREEN.blit(opponent_animal_4_country, opponent_animal_4_country_rect)
 
-                #ANIMAL 4 DAYTIME
             doubledot = ":"
             if type(self.opponent_scoring[3][2][1]) == int:
                 if self.opponent_scoring[3][2][1] > 0:
@@ -2128,7 +1781,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_daytime_rect = opponent_animal_4_daytime.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 0)))
             SCREEN.blit(opponent_animal_4_daytime, opponent_animal_4_daytime_rect)
 
-                #ANIMAL 4 ITEM 1
             doubledot = ":"
             if type(self.opponent_scoring[3][3][1]) == int:
                 if self.opponent_scoring[3][3][1] > 0:
@@ -2143,7 +1795,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_item1_rect = opponent_animal_4_item1.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 1)))
             SCREEN.blit(opponent_animal_4_item1, opponent_animal_4_item1_rect)
 
-                #ANIMAL 4 ITEM 2
             doubledot = ":"
             if type(self.opponent_scoring[3][4][1]) == int:
                 if self.opponent_scoring[3][4][1] > 0:
@@ -2158,7 +1809,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_item2_rect = opponent_animal_4_item2.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 2)))
             SCREEN.blit(opponent_animal_4_item2, opponent_animal_4_item2_rect)
 
-                #ANIMAL 4 ITEM 3
             doubledot = ":"
             if type(self.opponent_scoring[3][5][1]) == int:
                 if self.opponent_scoring[3][5][1] > 0:
@@ -2173,7 +1823,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_item3_rect = opponent_animal_4_item3.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 3)))
             SCREEN.blit(opponent_animal_4_item3, opponent_animal_4_item3_rect)
 
-                #ANIMAL 4 ITEM 4
             doubledot = ":"
             if type(self.opponent_scoring[3][6][1]) == int:
                 if self.opponent_scoring[3][6][1] > 0:
@@ -2188,7 +1837,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_item4_rect = opponent_animal_4_item4.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 4)))
             SCREEN.blit(opponent_animal_4_item4, opponent_animal_4_item4_rect)
 
-                #ANIMAL 4 ITEM 5
             doubledot = ":"
             if type(self.opponent_scoring[3][7][1]) == int:
                 if self.opponent_scoring[3][7][1] > 0:
@@ -2203,12 +1851,10 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_4_item5_rect = opponent_animal_4_item5.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 3) + (16 * 5)))
             SCREEN.blit(opponent_animal_4_item5, opponent_animal_4_item5_rect)
 
-                #ANIMAL 5
             opponent_animal_5_name = SMALLER_FONT.render(f"{self.opponent_scoring[4][0]}", 1, CHALLENGE_BUTTON_COLOR_1)
             opponent_animal_5_name_rect = opponent_animal_5_name.get_rect(topright = (WIDTH - 25, 75 + (125 * 4)))
             SCREEN.blit(opponent_animal_5_name, opponent_animal_5_name_rect)
 
-                #ANIMAL 5 COUNTRY
             doubledot = ":"
             if type(self.opponent_scoring[4][1][1]) == int:
                 if self.opponent_scoring[4][1][1] > 0:
@@ -2223,7 +1869,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_country_rect = opponent_animal_5_country.get_rect(topright = (WIDTH - 90 - 88, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 0)))
             SCREEN.blit(opponent_animal_5_country, opponent_animal_5_country_rect)
 
-                #ANIMAL 5 DAYTIME
             doubledot = ":"
             if type(self.opponent_scoring[4][2][1]) == int:
                 if self.opponent_scoring[4][2][1] > 0:
@@ -2238,7 +1883,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_daytime_rect = opponent_animal_5_daytime.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 0)))
             SCREEN.blit(opponent_animal_5_daytime, opponent_animal_5_daytime_rect)
 
-                #ANIMAL 5 ITEM 1
             doubledot = ":"
             if type(self.opponent_scoring[4][3][1]) == int:
                 if self.opponent_scoring[4][3][1] > 0:
@@ -2253,7 +1897,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_item1_rect = opponent_animal_5_item1.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 1)))
             SCREEN.blit(opponent_animal_5_item1, opponent_animal_5_item1_rect)
 
-                #ANIMAL 5 ITEM 2
             doubledot = ":"
             if type(self.opponent_scoring[4][4][1]) == int:
                 if self.opponent_scoring[4][4][1] > 0:
@@ -2268,7 +1911,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_item2_rect = opponent_animal_5_item2.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 2)))
             SCREEN.blit(opponent_animal_5_item2, opponent_animal_5_item2_rect)
 
-                #ANIMAL 5 ITEM 3
             doubledot = ":"
             if type(self.opponent_scoring[4][5][1]) == int:
                 if self.opponent_scoring[4][5][1] > 0:
@@ -2283,7 +1925,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_item3_rect = opponent_animal_5_item3.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 3)))
             SCREEN.blit(opponent_animal_5_item3, opponent_animal_5_item3_rect)
 
-                #ANIMAL 5 ITEM 4
             doubledot = ":"
             if type(self.opponent_scoring[4][6][1]) == int:
                 if self.opponent_scoring[4][6][1] > 0:
@@ -2298,7 +1939,6 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_item4_rect = opponent_animal_5_item4.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 4)))
             SCREEN.blit(opponent_animal_5_item4, opponent_animal_5_item4_rect)
 
-                #ANIMAL 5 ITEM 5
             doubledot = ":"
             if type(self.opponent_scoring[4][7][1]) == int:
                 if self.opponent_scoring[4][7][1] > 0:
@@ -2313,20 +1953,9 @@ class Screens(pygame.sprite.Sprite):
             opponent_animal_5_item5_rect = opponent_animal_5_item5.get_rect(topright = (WIDTH - 90, BASE_HEIGHT_COEFF + (125 * 4) + (16 * 5)))
             SCREEN.blit(opponent_animal_5_item5, opponent_animal_5_item5_rect)
 
-
-
-    
-
-
-        
-
-
-            
-
 class Form(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
         super().__init__()
-        # rectangle = pygame.Rect(x, y, 400, 40)
 
         self.type = type
 
@@ -2341,7 +1970,6 @@ class Form(pygame.sprite.Sprite):
         self.marked = False
 
         forms_group.add(self)
-        # log_screen_group.add(self)
 
     def update(self):
 
@@ -2349,7 +1977,6 @@ class Form(pygame.sprite.Sprite):
             pygame.draw.rect(SCREEN, MARKED, self.rect, 0)
         else:
             pygame.draw.rect(SCREEN, NOT_MARKED, self.rect, 0)
-
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, type, parm1, parm2, search = False):
@@ -2377,7 +2004,6 @@ class Button(pygame.sprite.Sprite):
             self.hover_color = "#aaf573"            
 
             enough_points = handle_db("get_points",user_logged)
-            # print("Enough points:", enough_points)
 
             if enough_points < 5:
                 self.clickable = False
@@ -2389,12 +2015,7 @@ class Button(pygame.sprite.Sprite):
                 self.og_color = CHALLENGE_BUTTON_COLOR_2
                 self.getting_color = FONT_COLOR
 
-
-        # self.clickable = True
-
         self.height_coeff = 30
-
-        # self.image = pygame.image.load("img/button.png").convert_alpha()
 
         if self.type == "login":
             self.text = BASE_FONT.render("LOGIN", 1, FONT_COLOR)
@@ -2423,19 +2044,7 @@ class Button(pygame.sprite.Sprite):
         
 
         self.text_rect = self.text.get_rect(center = (x + 100, y + 30))
-        # self.rect = self.text.get_rect(center = (x, y))
-        # self.rect = pygame.Rect(x, y, 2000, 60)
-        # self.rect = pygame.Rect(self.text_rect.x -40, self.text_rect.y - 20, self.text.get_width() + 80, self.text.get_height() + 40)
         self.rect = pygame.Rect(self.text_rect.x -40, self.text_rect.y - (self.height_coeff//2), self.text.get_width() + 80, self.text.get_height() + self.height_coeff)
-        
-
-        # if self.type == "fetchall" or "insert" or "back_to_login" or "login":
-        #     self.text = BASE_FONT.render("LOGIN", 1, FONT_COLOR)
-        
-        # self.image_og = self.image
-        # self.image_flipped = pygame.transform.flip(self.image, 1, 0)
-        
-        # self.rect = self.image.get_rect(center = (x, y))
         
         button_group.add(self)
         
@@ -2455,43 +2064,26 @@ class Button(pygame.sprite.Sprite):
         if self.type == "register_user":            
             self.parm1 = new_user_typing
             self.parm2 = new_password_typing
-            # print(self.parm1, self.parm2)
 
-        # print(self.mouse_on)
         mouse = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(mouse) and self.clickable:
-            # pygame.draw.rect(SCREEN,self.hover_color, (self.text_rect.x -40, self.text_rect.y - 20, self.text.get_width() + 80, self.text.get_height() + 40), 0, 100)
-            # self.text = BASE_FONT.render("LOGIN", 1, FONT_COLOR, self.hover_color)        
+        if self.rect.collidepoint(mouse) and self.clickable:       
             self.current_color = self.hover_color
         
             
         else:
-            # pygame.draw.rect(SCREEN,self.og_color, (self.text_rect.x -40, self.text_rect.y - 20, self.text.get_width() + 80, self.text.get_height() + 40), 0, 100)
-            # self.text = BASE_FONT.render("LOGIN", 1, FONT_COLOR, self.og_color)
-            # self.mouse_on = False
-            # self.image = self.image_og
             self.current_color = self.og_color
 
         pygame.draw.rect(SCREEN,self.current_color, (self.text_rect.x -40, self.text_rect.y - (self.height_coeff//2), self.text.get_width() + 80, self.text.get_height() + self.height_coeff), 0, 15)
 
         SCREEN.blit(self.text, self.text_rect)
 
-        # if pygame.mouse.get_pressed()[0]:
-        #     print("clicked")
-
     def action(self):
             if self.type == "login":        
                 return handle_db(self.type, self.parm1, self.parm2)
             if self.type == "register_user":                
                 return handle_db("insert", self.parm1, self.parm2)
-            # if self.type == "show_me_the_list":
-            #     return handle_db("fetchall", self.parm1, "friends")
-            # elif self.type == "back_to_login":
-            #     return log_screen()
-            # elif self.type == "register_new_user":
-            #     print("fuck you")
-            #     return lobby_screen()
+
 def moving_up():
     for one_frame in frames_group:
         if one_frame.screen == "player_card":          
@@ -2502,7 +2094,6 @@ def moving_up():
 
     for one_button in button_group:
         if one_button.type == "challenge":
-            # print(one_button.rect.y)
             one_button.moving_up = True
 
 def clear_screen():
@@ -2632,7 +2223,6 @@ def clear_screen():
     for one_object in logos_group:
         one_object.kill()
         logos_group.remove(one_object)
-
     
 def waiting_screen():
     global warning_message
@@ -2641,16 +2231,13 @@ def waiting_screen():
     scroll_arrows = []
 
     clear_screen()
-
         
-    Screens("waiting_screen")
-    
+    Screens("waiting_screen")    
 
 def waiting_waiting():    
     waiting_screen()    
     waiting_screen_group.update()   
     pygame.display.update()  
-
 
 def get_card():
     waiting_waiting()
@@ -2665,7 +2252,7 @@ def get_card():
 
     back_to_login_button = Button(2, 6, "back_to_explore", "", "")
 
-    new_card = randint(1,11) # TADY PAK NAPSAT AT TO POCITA ANIMALSY STEJNE JAK COUNTRIES Z DB
+    new_card = randint(1,handle_db("count_the_animals")) # TADY PAK NAPSAT AT TO POCITA ANIMALSY STEJNE JAK COUNTRIES Z DB
 
     GetCard(WIDTH//2, HEIGHT//2 - 28, new_card)
 
@@ -2682,7 +2269,6 @@ def count_screen(user = "", opponent = "", animals = "", country = ""):
 
     clear_screen()  
 
-    # ANIMALS
     pre_animals = [anima.pic for anima in list(animals)]
     animals = ""
     for anima in pre_animals:
@@ -2690,25 +2276,12 @@ def count_screen(user = "", opponent = "", animals = "", country = ""):
 
     animals = animals.strip(",")
 
-    
-
-    # USER
     user_status = user[6]
     user = user[0]
     
-    print("USER STATUS", user_status)
-
-    # OPPONENT
     opponent = opponent[0]
 
-    # COUNTRY
     country = country.pic
-
-
-    print("animals", type(animals))
-    print("user",type(user))
-    print("opponent", type(opponent))
-    print("country", type(country))
 
     if user_status == "free":
         handle_db("challenging", user, opponent, country, animals)
@@ -2726,7 +2299,6 @@ def answered(user):
 
     full_user = handle_db("get_full_user", user)
     full_opponent = handle_db("get_full_user_by_id",handle_db("get_full_user",user)[8])    
-    # country = full_user[7]
     full_country = handle_db("get_country",full_user[7])[0]
 
     user_animals = (full_user[9]).split(",")
@@ -2741,22 +2313,9 @@ def answered(user):
     for animal in opponent_animals:
         opponent_animals_full_list.append(handle_db("get_animal",animal))
 
-    print("THIS IS THE FINALE! USER", full_user)
-    print("THIS IS THE FINALE! OPPONENT", full_opponent)
-    print("THIS IS THE FINALE! COUNTRY", full_country)
-    print("THIS IS THE FINALE! USER ANIMALS", user_animals)
-    print("THIS IS THE FINALE! OPPONENT ANIMALS", opponent_animals)
-    print("THIS IS THE FINALE! USER ANIMALS FULL LIST", user_animals_full_list)
-    print("THIS IS THE FINALE! OPPONENT ANIMALS FULL LIST", opponent_animals_full_list)
-
-    # USER COUNTING
-
     user_results = {}
     user_pre_final_count = []
     user_pre_verdict = []
-
-    print("TYP ANIMALS USER LISTU", type(user_animals_full_list))
-    print("THATS HOW IT LOOKS LIKE", user_animals_full_list)
 
     if user_animals_full_list[0] != None:
 
@@ -2764,9 +2323,7 @@ def answered(user):
             user_results[f"animal_{i}"] = []
             for k in range(len(full_country)):
                 user_results[f"animal_{i}"].append(f"{full_country[k]},{user_animals_full_list[i][k]}")
-        
-        # print("LEN ANIMAL 1",len(user_results["animal_1"]))
-        
+                
         for i in range(len(user_results)):
             pre_counting = []
             row = -1
@@ -2776,7 +2333,6 @@ def answered(user):
                 if row == 1:
                     animalko = k[1]
                     pre_counting.append(animalko)
-                # if (k[0] == k[1] and k[0] != '0') or (k[0] == '0' and k[1] != '0') or (k[0] != k[1] and k[0] != '0') or row == 2 or row !=0 or row != 1 or row != 3:
                 if (k[0] != '0' or k[1] != '0') and k[1] != '0' and row not in [0,1,3]:
                     loc_type = ""
                     if row == 2:
@@ -2822,30 +2378,21 @@ def answered(user):
                         k[1] = int(k[0]) + int(k[1])
                         k = [loc_type, k[1]]
 
-                    # pre_counting.append(loc_type + str(k)) 
                     pre_counting.append(k)
 
                 if row == 15:
                     user_pre_verdict.append(pre_counting)
-
-        print("USER PRE VERDICT", user_pre_verdict)
 
         for one_animal in user_pre_verdict:
             for item in one_animal:
                 if type(item) == list:
                     user_pre_final_count.append(item[1])
 
-        print("USER PRE FINAL COUNT", user_pre_final_count)
-
         user_final_count = sum(user_pre_final_count)
-
-        print("USER FINAL COUNT", user_final_count)
 
     else:
         user_final_count = 0
         user_animals_full_list = []
-
-    # OPPONENT COUNTING
 
     opponent_results = {}
     opponent_pre_final_count = []
@@ -2857,9 +2404,7 @@ def answered(user):
             opponent_results[f"animal_{i}"] = []
             for k in range(len(full_country)):
                 opponent_results[f"animal_{i}"].append(f"{full_country[k]},{opponent_animals_full_list[i][k]}")
-        
-        # print("LEN ANIMAL 1",len(opponent_results["animal_0"]))
-        
+                
         for i in range(len(opponent_results)):
             opponent_pre_counting = []
             row = -1
@@ -2869,7 +2414,6 @@ def answered(user):
                 if row == 1:
                     animalko = k[1]
                     opponent_pre_counting.append(animalko)
-                # if (k[0] == k[1] and k[0] != '0') or (k[0] == '0' and k[1] != '0') or (k[0] != k[1] and k[0] != '0') or row == 2 or row !=0 or row != 1 or row != 3:
                 if (k[0] != '0' or k[1] != '0') and k[1] != '0' and row not in [0,1,3]:
                     loc_type = ""
                     if row == 2:
@@ -2915,83 +2459,51 @@ def answered(user):
                         k[1] = int(k[0]) + int(k[1])
                         k = [loc_type, k[1]]
 
-                    # pre_counting.append(loc_type + str(k)) 
                     opponent_pre_counting.append(k)
 
                 if row == 15:
                     opponent_pre_verdict.append(opponent_pre_counting)
-
-        # print("OPPONENT PRE VERDICT", opponent_pre_verdict)
 
         for one_animal in opponent_pre_verdict:
             for item in one_animal:
                 if type(item) == list:
                     opponent_pre_final_count.append(item[1])
 
-        # print("OPPONENT PRE FINAL COUNT", opponent_pre_final_count)
-
         opponent_final_count = sum(opponent_pre_final_count)
-
-        # print("OPPONENT FINAL COUNT", opponent_final_count)
     
     else:
         opponent_final_count = 0
         opponent_animals_full_list = []
-
-    # FOR FINAL
 
     user_verdict = []
 
     for one_item in user_pre_verdict:
         user_verdict.append(one_item)
 
-    # print("USER VERDICT", user_verdict)
-
     for one_animal in user_verdict:
         animal_item_count = 8 - len(one_animal)
         for new_empty in range(animal_item_count):
             one_animal.append(["",""])
-
-    # print("FINAL USER VERDICT", user_verdict)
 
     empty_animal = ["", ["",""], ["",""], ["",""], ["",""], ["",""], ["",""], ["",""]]
 
     for empty_animalko in range(5 - len(user_pre_verdict)):
         user_verdict.append(empty_animal)
 
-    # print("TOTAL FINAL USER VERDICT", user_verdict)
-
-    # FOR FINAL OPPONENT VERDICT
-
     opponent_verdict = []
 
     for one_item in opponent_pre_verdict:
         opponent_verdict.append(one_item)
-
-    # print("OPPONENT VERDICT", opponent_verdict)
 
     for one_animal in opponent_verdict:
         animal_item_count = 8 - len(one_animal)
         for new_empty in range(animal_item_count):
             one_animal.append(["",""])
 
-    # print("OPPONENT USER VERDICT", opponent_verdict)
-
     empty_animal = ["", ["",""], ["",""], ["",""], ["",""], ["",""], ["",""], ["",""]]
 
     for empty_animalko in range(5 - len(opponent_pre_verdict)):
         opponent_verdict.append(empty_animal)
-
-    # print("TOTAL FINAL OPPONENT VERDICT", opponent_verdict)
-    # print("")
-
-    # print("COUNTRY", full_country)
-    # print("USER", full_user)
-    # print("USER SCORING", user_verdict)
-    # print("USER TOTAL POINTS", user_final_count)
-    # print("OPPONENT", full_opponent)
-    # print("OPPONENT SCORING", opponent_verdict)
-    # print("OPPONENT TOTAL POINTS", opponent_final_count)
 
     return final_screen(user=full_user, user_scoring=user_verdict, user_total_points=user_final_count, opponent=full_opponent, opponent_scoring=opponent_verdict, opponent_total_points=opponent_final_count, country=full_country, user_animals=user_animals_full_list, opponent_animals=opponent_animals_full_list)
 
@@ -3014,16 +2526,6 @@ def final_screen(user, user_scoring, user_total_points, opponent, opponent_scori
     final_country = country
     final_user_animals = user_animals
     final_opponent_animals = opponent_animals
-
-    print("final_user", final_user)
-    print("final_user_scoring", final_user_scoring)
-    print("final_user_points", final_user_points)
-    print("final_opponent", final_opponent)
-    print("final_opponent_scoring", final_opponent_scoring)
-    print("final_opponent_points", final_opponent_points)
-    print("final_user_animals", final_user_animals)
-    print("final_opponent_animals", final_opponent_animals)
-    print("final_country", final_country)
 
     frame_height = 70
     frame_height_coeff = 125
@@ -3049,14 +2551,6 @@ def final_screen(user, user_scoring, user_total_points, opponent, opponent_scori
 
     Screens("final_screen", user=final_user, user_scoring=final_user_scoring, user_total_points=final_user_points, opponent=final_opponent, opponent_scoring=final_opponent_scoring, opponent_total_points=final_opponent_points, country=final_country, user_point_dif = user_points_difference)
 
-            
-
-                 
-    
-
-
-    
-
 def you_challenge_screen(username, opponent, country_num):
     waiting_waiting()
     global warning_message
@@ -3069,9 +2563,6 @@ def you_challenge_screen(username, opponent, country_num):
     full_opponent = (handle_db("get_full_user",opponent)) 
 
     YouChallenged(full_user, full_opponent)   
-
-    print(type(full_user[4]))
-    print(full_opponent)
 
     Logo(WIDTH//2-8, 47, "lobby_screen")
     Button(2, 6, "<< BACK  ", "", "")
@@ -3086,18 +2577,12 @@ def you_challenge_screen(username, opponent, country_num):
         index += 1
         width += width_coeff
         AnimalMiniCard(width, 550, animal, index)
-
-    # country_num = randint(1,3)
     
     country = handle_db("get_country",country_num)
 
-    CountryCard(85, 110, country)
-    # GoButton(710, 8, "")
-    
+    CountryCard(85, 110, country)  
 
-    Screens("you_challenge_screen", user_points = status)
-    
-    
+    Screens("you_challenge_screen", user_points = status)   
 
 def explore_screen(username):
     waiting_waiting()
@@ -3109,30 +2594,14 @@ def explore_screen(username):
     clear_screen()
     user_points = (handle_db("get_full_user",username))[3]
     bring_animals(username)
-    # get_the_list(handle_db("fetchall",username,"friends"), "friends")
-    # get_the_list(handle_db("top_10"),"top_10",username)
-    # get_the_list(handle_db("fetchall",username,"last_3"),"last_3",username)
-    # get_the_list(handle_db("fetchall",username,"all_users"),"all_users")
-    # print("USER POOOOOOOOOOOOOINTS:",user_points)
 
     Frames(10, 80, "lobby_screen")
-    # Frames(10, 140, "rivals")
-    # Frames(460, 140, "top_10")
-
-    # Button(120, 480, "search_user", "", "")
 
     Logo(WIDTH//2-8, 47, "lobby_screen")
 
     back_to_login_button = Button(2, 6, "<< BACK  ", "", "")
-    # explore_world = Button(690, 6, "GET CARD >>", "", "")
-    # fetchall_button = Button(WIDTH//2, 500, "show_me_the_list", username, "")
-
-    # Form(50, 430, "search")
     
     height = 500
-
-    # ScrollArrow(50, height, "to_left")
-    # ScrollArrow(800, height, "to_right")
 
     Button(370, 560, "get_card", "", "")
 
@@ -3140,59 +2609,34 @@ def explore_screen(username):
 
 def answered_2(username):
     user = handle_db("get_full_user",username)
-    print("FULL USER", user)
 
     user_ff = tuple(json.loads(user[10]))
-    print(user_ff)
-    print(type(user_ff))
 
     user_scoring_ff = json.loads(user[11])
-    print(user_scoring_ff)
-    print(type(user_scoring_ff))
 
     user_total_points_ff = user[12]
-    print(user_total_points_ff)
-    print(type(user_total_points_ff))
 
     opponent_ff = tuple(json.loads(user[13]))
-    print(opponent_ff)
-    print(type(opponent_ff))
 
     opponent_scoring_ff = json.loads(user[14])
-    print(opponent_scoring_ff)
-    print(type(opponent_scoring_ff))
 
     opponent_total_points_ff = user[15]
-    print(opponent_total_points_ff)
-    print(type(opponent_total_points_ff))
 
     country_ff = tuple(json.loads(user[16]))
-    print(country_ff)
-    print(type(country_ff))
 
     pre_user_animals_ff = json.loads(user[17])
-    print(pre_user_animals_ff)
-    print(type(pre_user_animals_ff))
     
     user_animals_ff = []
 
     for i in pre_user_animals_ff:
         user_animals_ff.append(tuple(i))
 
-    print(user_animals_ff)
-    print(type(user_animals_ff))
-
     pre_opponent_animals_ff = json.loads(user[18])
-    print(pre_opponent_animals_ff)
-    print(type(pre_opponent_animals_ff))
     
     opponent_animals_ff = []
 
     for i in pre_opponent_animals_ff:
         opponent_animals_ff.append(tuple(i))
-
-    print(opponent_animals_ff)
-    print(type(opponent_animals_ff))
 
     final_screen(user=user_ff,user_scoring=user_scoring_ff,user_total_points=user_total_points_ff,opponent=opponent_ff,opponent_scoring=opponent_scoring_ff,opponent_total_points=opponent_total_points_ff,country=country_ff,user_animals=user_animals_ff,opponent_animals=opponent_animals_ff)
     
@@ -3202,11 +2646,8 @@ def lobby_screen(username):
     global user_logged
     user_logged = username
 
-    print("USER LOGGED",user_logged)
-    print("USERNAME",username)
     waiting_waiting()
     clear_screen()
-    print("THIS IS THE USERNAME", username)
 
     status = (handle_db("get_full_user",username))[6]
     
@@ -3226,17 +2667,12 @@ def lobby_screen(username):
         waiting_waiting()
         return answered_2(username)
     
-    # waiting_waiting()
     global warning_message
     warning_message = ''
 
-    # clear_screen()
     user_points = (handle_db("get_full_user",username))[3]
-    # get_the_list(handle_db("fetchall",username,"friends"), "friends")
     get_the_list(handle_db("top_10"),"top_10",username)
     get_the_list(handle_db("fetchall",username,"last_3"),"last_3",username)
-    # get_the_list(handle_db("fetchall",username,"all_users"),"all_users")
-    # print("USER POOOOOOOOOOOOOINTS:",user_points)
 
     Frames(10, 80, "lobby_screen")
     Frames(10, 140, "rivals")
@@ -3248,10 +2684,8 @@ def lobby_screen(username):
 
     back_to_login_button = Button(2, 6, "<< LOGOFF", "", "")
     explore_world = Button(690, 6, "EXPLORE >>", "", "")
-    # fetchall_button = Button(WIDTH//2, 500, "show_me_the_list", username, "")
 
-    Form(50, 430, "search")
-   
+    Form(50, 430, "search")   
 
     Screens("lobby_screen", username, user_points)
 
@@ -3270,8 +2704,7 @@ def challenging_waiting_screen(user):
     pre_opponent = (handle_db("get_full_user",user))[8]
     points = (handle_db("get_full_user",user))[3]
 
-    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]
-  
+    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]  
 
     RejectOrAcceptButton(WIDTH//2 - 100, HEIGHT//2 + 60, "cancel", user, opponent, "")
 
@@ -3293,8 +2726,7 @@ def challenged_waiting_screen(user):
     pre_opponent = complete_user[8]
     country = complete_user[7]
     
-    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]
-  
+    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]  
 
     RejectOrAcceptButton(WIDTH//2 - 210, HEIGHT//2 + 60, "reject", user, opponent, country)
     RejectOrAcceptButton(WIDTH//2 + 20 , HEIGHT//2 + 60, "accept", user, opponent, country)
@@ -3315,14 +2747,11 @@ def rejected_waiting_screen(user):
    
     pre_opponent = (handle_db("get_full_user",user))[8]
     points = (handle_db("get_full_user",user))[3]
-    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]
-  
+    opponent = (handle_db("get_full_user_by_id",pre_opponent))[1]  
 
     RejectOrAcceptButton(WIDTH//2 - 40, HEIGHT//2 + 60, "ok", user, opponent, "")
 
-    Screens("rejected_waiting_screen", opponent, user_points = points)
-    
- 
+    Screens("rejected_waiting_screen", opponent, user_points = points) 
 
 def log_screen():
     global warning_message
@@ -3361,60 +2790,37 @@ def register_new_user_screen():
     Screens("register_new_user_screen")
 
 def get_the_list(received, game_type, username):
-    # print(received)
-    # print(type(received))
+
     if type(received) == str:
         list = received.split(",")
     else:
         list = received                   
 
-    # print("its the list", list)
-    # print(len(list))
-    # print(type(list))
-    # print(type(list[0]))
-
     if list[0] == "":
         list = ["nobody"]
-    
-
-    # for i in list:
-    #     print(i)
 
     nr = 155
     nr_card = nr-10
     nr_coeff = 52
     left_distance = 45
     if game_type == "friends":        
-        # for card in list:
-        #     nr += 50
-        #     Card(WIDTH//2, nr, "friends", str(card))
 
-        # handle_db("fetch","Ivos")
 
         for card in list:
-            # print(card)
             nr += nr_coeff
             nr_card += nr_coeff
             Card(left_distance, nr, "friends", str(handle_db("fetch",card,"friends")), username)
             Frames(left_distance - 20, nr_card, "player_card")
 
     if game_type == "all_users":        
-        # for card in list:
-        #     nr += 50
-        #     Card(WIDTH//2, nr, "friends", str(card))
-
-        # handle_db("fetch","Ivos")
 
         for card in list:
-            # print(card)
-            # print("card[0]",card[0])
             nr += 30
             Card(WIDTH//2 - 200, nr, "all_users", str(handle_db("fetch",card[0],"all_users")), username)
 
     if game_type == "top_10":
 
         for card in list:
-            # print("card in top10:",card)
             nr += nr_coeff
             nr_card += nr_coeff
             Card(left_distance + 450, nr, "friends", f"{card[0]} ({card[1]})", username)
@@ -3423,7 +2829,6 @@ def get_the_list(received, game_type, username):
     if game_type == "last_3":        
         
         for card in list:
-            # print("card in last 3",card)
             nr += nr_coeff
             nr_card += nr_coeff
             Card(left_distance, nr, "friends", str(handle_db("fetch",card,"last_3")), username)
@@ -3437,27 +2842,12 @@ def get_the_list(received, game_type, username):
                 Card(left_distance, nr+5, "friends", "--no opponent here so far--" , username)
                 Frames(left_distance - 20, nr_card, "player_card")
 
-    # if game_type == "friends":        
-    #     # for card in list:
-    #     #     nr += 50
-    #     #     Card(WIDTH//2, nr, "friends", str(card))
-
-    #     # handle_db("fetch","Ivos")
-
-    #     for card in list:
-    #         print(card)
-    #         print("card[0]",card[0])
-    #         nr += 30
-    #         Card(WIDTH//2 - 200, nr, "friends", str(handle_db("fetch",card[0],"friends")))
-
 def search_user(username):
     global warning_message
     nr = 570
     nr_card = nr-10
     nr_coeff = 52
     left_distance = 45
-    # handle_db("search_user",username)
-    # Card(left_distance, nr, "search", str(handle_db("search_user",username)), user_logged, True)
     if handle_db("search_user",username) != " ":
         Card(left_distance, nr, "search", str(handle_db("search_user",username)), user_logged, True)
         warning_message = ''
@@ -3466,7 +2856,6 @@ def search_user(username):
         warning_message = "User doesn't exist!"
 
 def bring_animals(username):
-    # print("THIS IS THE PRINTED ANIMAL:",handle_db("bring_animals",username))
 
     list = handle_db("bring_animals", username).split(",")
 
@@ -3474,35 +2863,16 @@ def bring_animals(username):
     width_coeff = 168 * 1.5
     
     for animal in list:
-        # print("animal from list:", animal)
         width += width_coeff
         AnimalCard(width, 140, get_animal_info(animal))
 
-    height = 500
-
-    # ScrollArrow(50, height, "to_left")
-    # ScrollArrow(800, height, "to_right")
-        
+    height = 500 
 
 def get_animal_info(animal_id):
     return handle_db("animal_info",animal_id)
 
 def bring_me_the_animal_count():
-    return handle_db("count_the_animals")
-    
-
-
-
-            
-
-    
-
-    
-    
-
-   
-
-        
+    return handle_db("count_the_animals")  
 
 button_group = pygame.sprite.Group()
 forms_group = pygame.sprite.Group()
@@ -3535,18 +2905,12 @@ final_country_card_group = pygame.sprite.Group()
 final_screen_group = pygame.sprite.Group()
 final_animal_mini_card_group = pygame.sprite.Group()
 continue_button_group = pygame.sprite.Group()
-# screens_group = pygame.sprite.Group()
-
-
-# handle_db("fetchall", "sandokan" , "tygr")
-
 
 WIDTH = 900
 HEIGHT = 700
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 BG_IMAGE = pygame.image.load("img/background.png").convert_alpha()
-
 
 clock = pygame.time.Clock()
 FPS = 60
@@ -3556,9 +2920,6 @@ NOT_MARKED = "#c8c8c8"
 MARKED = "#2eb612"
 WARNING_COLOR = "red"
 
-
-# BASE_FONT = pygame.font.Font(None, 32)
-# SMALLER_FONT = pygame.font.Font(None, 26)
 MORE_BIGGER_FONT = pygame.font.Font("fonts/Radlush_Bold.ttf", 60)
 SLIGHTLY_BIGGER_FONT = pygame.font.Font("fonts/Radlush_Bold.ttf", 50)
 BIGGER_FONT = pygame.font.Font("fonts/Radlush_Bold.ttf", 40)
@@ -3574,9 +2935,7 @@ CHALLENGE_FONT = pygame.font.Font("fonts/Radlush_Bold.ttf", 12)
 CHALLENGE_BUTTON_COLOR_1 = "#327600"
 CHALLENGE_BUTTON_COLOR_2 = "#65c61e"
 
-# GOT_COLOR = "#800097"
 GOT_COLOR = "#620074"
-# CHOOSE_COLOR = "#3cff33"
 CHOOSE_COLOR = "#1aff0f"
 CHALLENGING_COLOR = "#a5008e"
 NEGATIVE_COLOR = "#a50032"
@@ -3589,9 +2948,6 @@ FADE_DOWN_MIN = 580
 
 MOVING_SPEED = 2
 
-# TEMP_SURFACE = pygame.Surface((900, 700), pygame.SRCALPHA)   
-
-
 login_typing = ''
 password_typing = ''
 warning_message = ''
@@ -3602,33 +2958,15 @@ scroll_arrows = []
 
 user_logged = ''
 
-
-
-
-# login_button = Button(WIDTH//2, HEIGHT//2, "insert", "figo", "barca")
-# fetchall_button = Button(WIDTH//2, HEIGHT//4, "fetchall", "", "")
-# delete_button = Button(WIDTH//2, HEIGHT-20, "delete", "name", "Zidane")
-
-# Form(5,5,"login")
-# Form(5,50,"password")
-
 log_screen()
 switch = False
 run = True
 while run:    
-    # next((print(animals.chosen_animals) for animals in you_challenged_group),None)
-    # [print("OPPONENT",chall.opponent) for chall in list(you_challenged_group)]
-    # [print("USER",chall.user[0]) for chall in list(you_challenged_group)]
-    # [print("COUNTRY IN USER",user.country) for user in list(you_challenged_group)]
     
     SCREEN.blit(BG_IMAGE, (0,-10))
-    # SCREEN.blit(TEMP_SURFACE,(0,0))
-    # TEMP_SURFACE.fill((0, 0, 0, 0))
-    # SCREEN.fill(BLACK)
+
     pos = pygame.mouse.get_pos()
     marked_buttons = 0
-    # for i in button_group:
-    #     print(i.type)
 
     height = 500
      
@@ -3637,7 +2975,6 @@ while run:
             ScrollArrow(800, height, "to_right")
             scroll_arrows.append("right_arrow")
         elif one_card.rect.left > len(animal_card_group)*252 and "right_arrow" in scroll_arrows:
-            # print("FUCK YOU")
             for one_arrow in scroll_arrows_group:
                 if one_arrow.type == "to_right":
                     one_arrow.kill()
@@ -3660,7 +2997,6 @@ while run:
             ScrollArrow(800, height, "to_right", "mini")
             scroll_arrows.append("right_arrow")
         elif one_card.rect.left > len(animal_mini_card_group)*120 and "right_arrow" in scroll_arrows:
-            # print("FUCK YOU")
             for one_arrow in scroll_arrows_group:
                 if one_arrow.type == "to_right":
                     one_arrow.kill()
@@ -3676,43 +3012,7 @@ while run:
                 if one_arrow.type == "to_left":
                     one_arrow.kill()
                     scroll_arrows_group.remove(one_arrow)
-                    scroll_arrows.remove("left_arrow")
-
-    # for one_card in animal_card_group:
-    #     if one_card.rect.x < 0 and "right_arrow" not in scroll_arrows:
-    #         ScrollArrow(800, height, "to_right")
-    #         scroll_arrows.append("right_arrow")
-    #         break
-    #     elif one_card.rect.x < 0 and "right_arrow" in scroll_arrows:
-    #         pass
-    #         break
-    #     elif one_card.rect.x > 0 and "right_arrow" in scroll_arrows:
-    #         for one_arrow in scroll_arrows_group:
-    #             if one_arrow.type == "to_right":
-    #                 one_arrow.kill()
-    #                 scroll_arrows_group.remove(one_arrow)
-    #                 scroll_arrows.remove("right_arrow")
-    #                 break
-
-    # for one_card in animal_card_group:
-    #     if one_card.rect.x > WIDTH and "left_arrow" not in scroll_arrows:
-    #         ScrollArrow(50, height, "to_left")
-    #         scroll_arrows.append("left_arrow")
-    #         break
-    #     elif one_card.rect.x > WIDTH and "left_arrow" in scroll_arrows:
-    #         pass
-    #         break
-    #     # else:
-    #     elif one_card.rect.x < WIDTH and "left_arrow" in scroll_arrows:
-    #         print("HEY PICO!")
-    #         for one_arrow in scroll_arrows_group:
-    #             if one_arrow.type == "to_left":
-    #                 one_arrow.kill()
-    #                 scroll_arrows_group.remove(one_arrow)
-    #                 scroll_arrows.remove("left_arrow")
-    #                 print("IAM KILLING IT")
-    #                 break
-    
+                    scroll_arrows.remove("left_arrow")   
 
     for one_form in forms_group:
         if one_form.marked:
@@ -3725,10 +3025,7 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN:
                 for one_button in button_group:
                     
-                    # if one_button.image == one_button.image_flipped and one_button.type == "back_to_login":
-                    #     log_screen()
                     if one_button.current_color == one_button.hover_color and (one_button.type == "EXPLORE >>" or one_button.type == "back_to_explore"):                        
-                        print("USER LOGGED In EXPLORE", user_logged)
                         explore_screen(user_logged)
                     elif one_button.current_color == one_button.hover_color and one_button.type == "search_user":
                         
@@ -3748,8 +3045,7 @@ while run:
                                 one_object.remove()
 
                         search_user(search_typing)
-                        search_typing = ''
-                        
+                        search_typing = ''                        
                         
                     elif one_button.current_color == one_button.hover_color and one_button.type == "challenge":
                         you_challenge_screen(user_logged, one_button.user, randint(1,handle_db("get_countries_count")))
@@ -3764,18 +3060,13 @@ while run:
                     elif one_button.current_color == one_button.hover_color and one_button.type == "register_new_user":
                         register_new_user_screen()
                     elif one_button.current_color == one_button.hover_color and one_button.type == "login" and password_typing != "" and login_typing != "":
-                        
-                        # waiting_screen()
-                        # waiting_screen_group.update()   
-                        # pygame.display.update()                                             
+                                           
                         action_done = one_button.action()
                         user_logged = login_typing                        
                         login_typing, password_typing = "", ""
-                        # print(action_done)
-                        # print(one_button.type)
+
                         if action_done == True:                            
                             if one_button.type == "login":
-                                # waiting_waiting()                                
                                 lobby_screen(user_logged)
                                 warning_message = ''
                         else:
@@ -3784,26 +3075,19 @@ while run:
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "login" and password_typing != "":
                         action_done = one_button.action()                        
-                        # login_typing, password_typing = "", ""
                         warning_message = "Please enter your username!"
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "login" and login_typing != "":
                         action_done = one_button.action()                        
-                        # login_typing, password_typing = "", ""
                         warning_message = "Please enter your password!"
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "login":
                         warning_message = "Please enter your credentials!"
 
-                    ### REGISTER NEW USER ###
-
                     elif one_button.current_color == one_button.hover_color and one_button.type == "register_user" and new_password_typing != "" and new_user_typing != "":
                         action_done = one_button.action() 
                         new_user = new_user_typing 
-                        # print("register user works here", action_done)                      
-                        # new_user_typing, new_password_typing = "", ""
-                        # print(action_done)
-                        # print(one_button.type)
+ 
                         if action_done == True:
                             user_logged = new_user     
                             lobby_screen(new_user)                                                 
@@ -3816,19 +3100,14 @@ while run:
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "register_user" and new_password_typing != "":
                         action_done = one_button.action()                        
-                        # login_typing, password_typing = "", ""
                         warning_message = "Please choose your username!"
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "register_user" and new_user_typing != "":
                         action_done = one_button.action()                        
-                        # login_typing, password_typing = "", ""
                         warning_message = "Please choose your password!"
 
                     elif one_button.current_color == one_button.hover_color and one_button.type == "register_user":
-                        warning_message = "Please choose your credentials!"
-
-                    
-
+                        warning_message = "Please choose your credentials!" 
 
                 for one_form in forms_group:              
                     if one_form.rect.collidepoint(pos):
@@ -3836,30 +3115,12 @@ while run:
                         
                     else:
                         one_form.marked = False           
-        # print(marked_buttons)
         if marked_buttons == 0:
-            # print(marked_buttons)
-            # print(type(forms_group))
             for one_form in forms_group:
                 one_form.marked = True
                 break
 
         if event.type == pygame.KEYDOWN:
-            # if event.key == pygame.K_DOWN:
-            #     for one_frame in frames_group:
-            #         if one_frame.screen == "player_card":          
-            #             one_frame.moving_down = True   
-
-            #     for one_card in cards_group:
-            #         one_card.moving_down = True
-
-            #     for one_button in button_group:
-            #         if one_button.type == "challenge":
-            #             print(one_button.rect.y)
-            #             one_button.moving_down = True
-
-            # if event.key == pygame.K_UP:
-            #     moving_up()
                             
             for one_form in forms_group:
                 if one_form.marked:
@@ -3954,10 +3215,7 @@ while run:
                         else:
                             password_typing += event.unicode
 
-                    ### REGISTER NEW USER ###
-
                     elif one_form.type == "new_user":
-                        # print(one_form.type)
 
                         if event.key == pygame.K_TAB:
                             one_form.marked = False
@@ -3970,9 +3228,7 @@ while run:
                             register_done = handle_db("insert", new_user_typing, new_password_typing)
                             new_user = new_user_typing
                             user_logged = new_user_typing
-                            # new_user_typing, new_password_typing = "", ""
                             if register_done == True:                                
-                                # user_logged = new_user
                                 lobby_screen(new_user)
                                 warning_message = 'user added'
                                 new_user_typing, new_password_typing = "", ""
@@ -3988,7 +3244,6 @@ while run:
                             warning_message = "Please enter your password!"
                                 
                         elif event.key == pygame.K_RETURN:
-                            # print("I am here")
                             warning_message = "Please enter your credentials!"
 
                         else:
@@ -4009,7 +3264,6 @@ while run:
                             new_user_typing, new_password_typing = "", ""
                             if register_done == True:
                                 lobby_screen(new_user)
-                                # warning_message = 'user added'
                             elif register_done == "duplicate user":
                                 warning_message = "User already exists! Try something else!"
                             else:                               
@@ -4025,44 +3279,16 @@ while run:
                             warning_message = "Please enter your credentials!"
                             
                         else:
-                            new_password_typing += event.unicode
-                    
+                            new_password_typing += event.unicode                   
                 
                 else:
                     if switch:
                         one_form.marked = True
                         switch = False
-                            
-        # else:
-        #     for one_button in button_group:
-        #         if one_button.type == "challenge":
-                    
-        #             one_button.moving_down = False    
-        #             one_button.moving_up = False
-
-        #     for one_card in cards_group:          
-        #         one_card.moving_down = False  
-        #         one_card.moving_up = False     
-
-        #     for one_frame in frames_group:
-        #         if one_frame.screen == "player_card":          
-        #             one_frame.moving_down = False
-        #             one_frame.moving_up = False    
-
-
-    
-            # if event.key == pygame.K_BACKSPACE:
-            #     user_text = user_text[:-1]
-            # else:
-            #     user_text += event.unicode
-        
-    
-    
-    # button_group.draw(SCREEN)
+ 
     frames_group.update()
     logos_group.update()
     button_group.update()
-    # SCREEN.blit(TEMP_SURFACE,(0,0))
     forms_group.update()
     log_screen_group.update()
     lobby_screen_group.update()
@@ -4090,28 +3316,7 @@ while run:
     reject_or_accept_buttons_group.update()
     rejected_waiting_screen_group.update()
     final_screen_group.update()
-    continue_button_group.update()
-    # SCREEN.blit(TEMP_SURFACE,(0,0))
-
-    
-    
-    
-    # screens_group.update()
-    
-
-    # login_text = BASE_FONT.render(login_typing, 1, (255, 255, 255))
-    # login_text_rect = login_text.get_rect(topleft = (255, 210))
-    # SCREEN.blit(login_text, login_text_rect)
-
-    # password_text = BASE_FONT.render(password_typing, 1, (255, 255, 255))
-    # password_text_rect = password_text.get_rect(topleft = (255, 255))
-    # SCREEN.blit(password_text, password_text_rect)
-
-    # warning_text = BASE_FONT.render(warning_message, 1, (255, 255, 255))
-    # warning_text_rect = warning_text.get_rect(center = (WIDTH//2, 310))
-    # SCREEN.blit(warning_text, warning_text_rect)
-
-    
+    continue_button_group.update()    
     
     pygame.display.update()
 
