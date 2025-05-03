@@ -10,8 +10,6 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             port = 3306,
             database = "animalchallenger_main" 
         )
-        # if action == "connect":
-        print("Uspesne pripojeni!")
 
     except mysql.connector.Error as err:
         print(f"Chyba pri pripojovani: {err}")
@@ -22,21 +20,18 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                 
         cur.execute(f"SELECT username FROM users")
         fetched = cur.fetchall()
-        mydb.commit()
-
-                   
+        mydb.commit()                   
         
         for one_row in fetched:
             if one_row[0] == parm1:
                 return "duplicate user"
-
+            
         try:
             cur.execute(f"SELECT COUNT(*) FROM animals")
             random_animal = randint(1,cur.fetchone()[0])
             print(random_animal)
             cur.execute(f"INSERT INTO users(username, password, last_3, points, animals) VALUES('{parm1}','{parm2}','', 10,'{random_animal}')")
             mydb.commit()
-            print("Zaznam byl vlozen")
             return True
 
         except mysql.connector.Error as err:
@@ -48,13 +43,11 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         try:
             cur.execute(f"DELETE FROM users WHERE {parm1} = '{parm2}'")
             mydb.commit()
-            print("Zaznam byl smazan")
 
         except mysql.connector.Error as err:
             print(f"Zaznam nebyl smazan: {err}")
 
-    if action == "fetchall":
-        
+    if action == "fetchall":        
 
         try:
             if parm2 == "all_users":
@@ -69,10 +62,8 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             if parm2 == "all_users":
                 fetched = cur.fetchall()
             elif parm2 == "friends":
-                # print("ITS FRENS IC FRENS IC FRENS")
                 fetched = cur.fetchone()
             elif parm2 == "last_3":
-                # print("ITS FRENS IC FRENS IC FRENS")
                 fetched = cur.fetchone()
                 
                 if fetched == None:
@@ -80,22 +71,13 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                     return "--no opponents yet--"
             else:
                 fetched = cur.fetchone()
-            # mydb.commit()
 
-            # print("fetched NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOW",str(fetched[0]).split(","))
-            
-            
-            # for row in fetched:
-                
-            #     print("this",row)
             if parm2 == "all_users":
                 return fetched
             elif parm2 == "friends":
                 
                 pre_sorted_fetch = str(fetched[0]).split(",")
-                # sorted_fetch = sorted(pre_sorted_fetch)
-                # print("sorted fetch:",sorted_fetch)
-                # return sorted_fetch
+
                 pre_sorted_points = []
 
                 for i in pre_sorted_fetch:
@@ -105,56 +87,19 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
 
                 help_dict = {}
                 for i in range(len(pre_sorted_fetch)):
-                    help_dict[f"{pre_sorted_fetch[i]}"] = pre_sorted_points[i]
-
+                    help_dict[f"{pre_sorted_fetch[i]}"] = pre_sorted_points[i]                
                 
-                
-                pre_final = sorted(help_dict.items(), key=lambda x: x[1])
-                
+                pre_final = sorted(help_dict.items(), key=lambda x: x[1])                
 
                 final = []
                 for i in pre_final:
                     final.append(i[0])
 
-                final.reverse()
-
-                
+                final.reverse()                
 
                 return final
             
             elif parm2 == "last_3":
-                # print("ITS LAST33333333")
-                # print("fetched NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOW",str(fetched[0]).split(","))
-                # pre_sorted_fetch = str(fetched[0]).split(",")
-                # # sorted_fetch = sorted(pre_sorted_fetch)
-                # # print("sorted fetch:",sorted_fetch)
-                # # return sorted_fetch
-                # pre_sorted_points = []
-
-                # for i in pre_sorted_fetch:
-                #     cur.execute(f"select points from users where id = {i}")
-                #     points = cur.fetchone()
-                #     pre_sorted_points.append(points[0])
-
-                # help_dict = {}
-                # for i in range(len(pre_sorted_fetch)):
-                #     help_dict[f"{pre_sorted_fetch[i]}"] = pre_sorted_points[i]
-
-                # print("help diiiiiiiiiiiiiiict",help_dict)
-
-                # print("presorted fetch", pre_sorted_fetch)
-                # print("presorted points", pre_sorted_points)
-                
-                # pre_final = sorted(help_dict.items(), key=lambda x: x[1])
-                # print("PRE FINALLLLLLL",pre_final)
-
-                # final = []
-                # for i in pre_final:
-                #     final.append(i[0])
-
-                # final.reverse()
-
-                # print("FINAAAAAAAAL", final)
 
                 return fetched[0]
 
@@ -182,12 +127,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             fetched = cur.fetchone()
             mydb.commit()
             
-            # for row in fetched:
-            #     print(row)
-
-            
             if parm2 == "all_users":
-            # return fetched[0]
                 return f"{fetched[0]} - {fetched[1]}"
             elif parm2 == "friends":
                 counting_letters = len(fetched[0]) + len(str(fetched[1]))
@@ -200,8 +140,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                 return f"{fetched[0]} ({fetched[1]})"
 
             else:
-                return fetched[0]
-        
+                return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se FETCH: {err}")
@@ -211,12 +150,9 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         try:            
             cur.execute(f"SELECT * from users where username = '{parm1}'")                  
 
-            fetched = cur.fetchone()
-
-            
+            fetched = cur.fetchone()            
         
-            return fetched
-        
+            return fetched        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se GET FULL USER: {err}")
@@ -228,8 +164,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
 
             fetched = cur.fetchone()            
         
-            return fetched[0]
-        
+            return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se GET FULL USER: {err}")
@@ -241,8 +176,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
 
             fetched = cur.fetchone()            
         
-            return fetched
-        
+            return fetched        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se GET FULL USER: {err}")
@@ -252,12 +186,9 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         try:            
             cur.execute(f"SELECT username,points from users order by points desc limit 8")                  
 
-            fetched = cur.fetchall()
-
-            
+            fetched = cur.fetchall()            
         
-            return fetched
-        
+            return fetched        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se TOP 10: {err}")
@@ -267,12 +198,9 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         try:            
             cur.execute(f"SELECT last_3 from users where username = '{parm1}'")                  
 
-            fetched = cur.fetchone()
-
-            
+            fetched = cur.fetchone()            
         
-            return fetched
-        
+            return fetched        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se LAST 30: {err}")
@@ -283,13 +211,11 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             cur.execute(f"SELECT username,points from users where username = '{parm1}'")                  
 
             fetched = cur.fetchone()
-
             
             if fetched == None:
                 return " "
             else:
-                return f"{fetched[0]} ({fetched[1]})"
-        
+                return f"{fetched[0]} ({fetched[1]})"        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se SEARCH USER: {err}")
@@ -299,19 +225,14 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         try:            
             cur.execute(f"SELECT animals from users where username = '{parm1}'")                  
 
-            fetched = cur.fetchone()
-
+            fetched = cur.fetchone()            
             
-            
-            return fetched[0]
-        
+            return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se BRING ANIMALS: {err}")
 
     if action == "animal_info":
-
-        print("TOTOK DOSTAVAM!", parm1)
         
         try:            
             cur.execute(f"SELECT pic, name from animals where pic = '{parm1}'")                  
@@ -320,61 +241,38 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
 
             print("ANIMALS ID FETCHED:", fetched[0])
             
-            return fetched[0]
-        
+            return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se ANIMAL INFO: {err}")   
 
     if action == "get_card":
-
-        # print("TOTOK DOSTAVAM!", parm1)
         
         try:            
             cur.execute(f"SELECT animals from users where username = '{parm1}'")                  
 
             fetched = cur.fetchone()
 
-            print("GETCARDS FETCHED:", fetched[0])
-
             new_animals = str(parm2) + "," + fetched[0]
-
-            print("NEW ANIMALS:", new_animals)
 
             cur.execute(f"UPDATE users SET animals = '{new_animals}' where username = '{parm1}'")
             cur.execute(f"UPDATE users SET points = points - 5 where username = '{parm1}'")
             
             mydb.commit()
-
                         
-            return fetched[0]
-        
+            return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se GET CARD: {err}")   
 
     if action == "get_points":
-
-    # print("TOTOK DOSTAVAM!", parm1)
     
         try:            
             cur.execute(f"SELECT points from users where username = '{parm1}'")                  
 
             fetched = cur.fetchone()
-
-            # print("GETCARDS FETCHED:", fetched[0])
-
-            # new_animals = str(parm2) + "," + fetched[0]
-
-            # print("NEW ANIMALS:", new_animals)
-
-            # cur.execute(f"UPDATE users SET animals = '{new_animals}' where username = '{parm1}'")
-            # cur.execute(f"UPDATE users SET points = points - 5 where username = '{parm1}'")
-            
-            # mydb.commit()
                         
-            return fetched[0]
-        
+            return fetched[0]        
 
         except mysql.connector.Error as err:
             print(f"Nepovedlo se GET POINTS: {err}")   
@@ -397,8 +295,6 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             cur.execute(f"SELECT * from countries where pic = {parm1}")                  
 
             fetched = cur.fetchall()    
-
-            # print("GET COUNTRY", fetched)                    
                     
             return fetched      
 
@@ -411,8 +307,6 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             cur.execute(f"SELECT * from animals where pic = {parm1}")                  
 
             fetched = cur.fetchall()    
-
-            # print("BRING_ME_THE_ANIMAL", fetched)                    
                     
             return fetched      
 
@@ -433,14 +327,11 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
     if action == "challenged":
     
         try:            
-            cur.execute(f"UPDATE users SET status = 'answered', list_of_animals = '{parm4}' where id = {parm1}")
-            # cur.execute(f"UPDATE users SET status = 'answered_2' where id = {parm2}")
- 
+            cur.execute(f"UPDATE users SET status = 'answered', list_of_animals = '{parm4}' where id = {parm1}") 
             mydb.commit() 
 
         except mysql.connector.Error as err:
-            print(f"Nepovedlo se CHALLENGED GO: {err}")
-            
+            print(f"Nepovedlo se CHALLENGED GO: {err}")            
 
     if action == "cancelled_challenge":
 
@@ -451,15 +342,12 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             cur.execute(f"UPDATE users set points = points - 2 where username = '{parm1}'")
             cur.execute(f"UPDATE users set status = 'free', country = 0, opponent = 0, list_of_animals = '' where username = '{parm2}'")
 
-
             mydb.commit() 
             
         except mysql.connector.Error as err:
             print(f"Nepovedlo se CANCELLED CHALLENGE: {err}") 
 
     if action == "rejected_challenge":
-
-        print("am i here?",parm2)
     
         try:            
             cur.execute(f"UPDATE users set status = 'free', country = 0, opponent = 0, list_of_animals = '' where username = '{parm1}'")            
@@ -482,14 +370,12 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
         except mysql.connector.Error as err:
             print(f"Nepovedlo se REJECTED OK: {err}") 
 
-
     if action == "get_full_user_by_id":
     
         try:            
             cur.execute(f"SELECT * from users where id = {parm1}")
 
             fetched = cur.fetchone()  
-            print("THIS FROM THAT", fetched)          
         
             return fetched 
             
@@ -534,7 +420,6 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                   
         except mysql.connector.Error as err:
             print(f"Nepovedlo se ANSWERED 2: {err}")
-
     
     if action == "count_the_animals":
     
@@ -580,14 +465,6 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
 
             last3 = fetched[0].split(",")
 
-            print("PARM2",parm2)
-            print("TYP PARMU2",type(parm2))
-
-            for item in last3:
-                print(type(item), item)
-
-            print("LAST3LIST",last3)
-
             if str(parm2) in last3:
                 last3.remove(str(parm2))
 
@@ -606,13 +483,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                 else:
                     slast3 += str(item)+","
 
-            print("MEZISLAST",slast3)
-
             slast3 = slast3.strip(",")
-
-
-            print("PUVODNI LAST3", fetched[0])
-            print("SLAST3", slast3)
 
             cur.execute(f"UPDATE users SET last_3 = '{slast3}' where id = {parm1}")            
             mydb.commit()
@@ -620,9 +491,7 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
             return fetched[0]
                   
         except mysql.connector.Error as err:
-            print(f"Nepovedlo se SLAST3: {err}")
-
-    
+            print(f"Nepovedlo se SLAST3: {err}")    
 
     if action == "login" and parm1 and parm2:
 
@@ -642,11 +511,4 @@ def handle_db(action, parm1 = "", parm2 = "", parm3 = "", parm4 = "", parm5 = ""
                         return False
 
         except mysql.connector.Error as err:
-            print(f"Nepovedlo se LOGIN: {err}")
-
-            
-    
-    
-
-
-
+            print(f"Nepovedlo se LOGIN: {err}") 
